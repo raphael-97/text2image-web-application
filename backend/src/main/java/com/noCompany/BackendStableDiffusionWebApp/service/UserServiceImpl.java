@@ -2,7 +2,6 @@ package com.noCompany.BackendStableDiffusionWebApp.service;
 
 import com.noCompany.BackendStableDiffusionWebApp.domain.User;
 import com.noCompany.BackendStableDiffusionWebApp.dto.UserDto;
-
 import com.noCompany.BackendStableDiffusionWebApp.dto.auth.RegisterDto;
 import com.noCompany.BackendStableDiffusionWebApp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,17 +16,16 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
-
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -40,6 +38,7 @@ public class UserService implements UserDetailsService {
     public UserDto registerUser(RegisterDto registerDto) {
         User newUser = mapRegisterDtoToUser(registerDto);
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        newUser.setRoles(Set.of("USER"));
         User savedUser = userRepository.save(newUser);
         return mapUserToUserDto(savedUser);
     }
@@ -58,7 +57,6 @@ public class UserService implements UserDetailsService {
                 .email(registerDto.getEmail())
                 .password(registerDto.getPassword())
                 .credits(5L)
-                .roles(Set.of("USER"))
                 .build();
     }
     private UserDto mapUserToUserDto(User user) {
