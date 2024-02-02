@@ -1,10 +1,14 @@
 "use client";
 import { Button, Input, Link, Divider } from "@nextui-org/react";
 import { loginAction } from "@/app/lib/actions";
+import { useFormState, useFormStatus } from "react-dom";
+
+const messageInit = "";
 
 export default function LoginForm() {
+  const [errorMessage, action] = useFormState(loginAction, messageInit);
   return (
-    <form action={loginAction} className="px-5">
+    <form action={action} className="px-5">
       <Input
         className="pt-5"
         label="Email"
@@ -31,6 +35,7 @@ export default function LoginForm() {
         <Button type="submit" fullWidth color="secondary">
           Log in
         </Button>
+        {errorMessage && <p>{errorMessage}</p>}
       </div>
 
       <div className="flex">

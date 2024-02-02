@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Navigationbar } from "@/components/Navigationbar";
+import { Navigationbar } from "@/components/Navigationbar/Navigationbar";
 import { Providers } from "@/components/Providers";
-
+import { cookies } from "next/headers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -16,11 +16,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const loggedIn = cookies().get("token") ? true : false;
   return (
     <html lang="en">
       <body className={inter.className}>
         <Providers>
-          <Navigationbar></Navigationbar>
+          <Navigationbar isAuthorized={loggedIn}></Navigationbar>
           {children}
         </Providers>
       </body>
