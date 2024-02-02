@@ -3,6 +3,7 @@ package com.noCompany.BackendStableDiffusionWebApp.controller;
 import com.noCompany.BackendStableDiffusionWebApp.dto.UserDto;
 import com.noCompany.BackendStableDiffusionWebApp.dto.auth.LoginDto;
 import com.noCompany.BackendStableDiffusionWebApp.dto.auth.RegisterDto;
+import com.noCompany.BackendStableDiffusionWebApp.dto.auth.TokenDto;
 import com.noCompany.BackendStableDiffusionWebApp.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,15 +23,15 @@ public class AuthController {
 
     @PostMapping
     @RequestMapping("/register")
-    public ResponseEntity<UserDto> registerUser(@RequestBody RegisterDto registerDto) {
-        UserDto response = authService.registerUser(registerDto);
+    public ResponseEntity<TokenDto> registerUser(@RequestBody RegisterDto registerDto) {
+        TokenDto response = authService.registerUser(registerDto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PostMapping
     @RequestMapping("/login")
-    public ResponseEntity<UserDto> loginUser(@RequestBody LoginDto loginDto) {
-        UserDto response = authService.loginUser(loginDto);
+    public ResponseEntity<TokenDto> loginUser(@RequestBody LoginDto loginDto) {
+        TokenDto response = authService.loginUser(loginDto);
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 }

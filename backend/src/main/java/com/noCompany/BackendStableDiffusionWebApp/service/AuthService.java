@@ -1,9 +1,8 @@
 package com.noCompany.BackendStableDiffusionWebApp.service;
 
-import com.noCompany.BackendStableDiffusionWebApp.domain.User;
-import com.noCompany.BackendStableDiffusionWebApp.dto.UserDto;
 import com.noCompany.BackendStableDiffusionWebApp.dto.auth.LoginDto;
 import com.noCompany.BackendStableDiffusionWebApp.dto.auth.RegisterDto;
+import com.noCompany.BackendStableDiffusionWebApp.dto.auth.TokenDto;
 import com.noCompany.BackendStableDiffusionWebApp.jwtutils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,21 +26,16 @@ public class AuthService {
         this.jwtService = jwtService;
     }
 
-    public UserDto loginUser(LoginDto loginDto) {
+    public TokenDto loginUser(LoginDto loginDto) {
         Authentication authenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated(loginDto.getEmail(), loginDto.getPassword());
         Authentication authenticationResponse = authenticationManager.authenticate(authenticationRequest);
-
-        User user = (User) authenticationResponse.getPrincipal();
-        UserDto response = userService.getUserByEmail(user.getEmail());
-        response.setJwtToken(jwtService.generateJwtToken(authenticationResponse));
-        return response;
+        return new TokenDto(jwtService.generateJwtToken(authenticationResponse));
     }
 
-    public UserDto registerUser(RegisterDto registerDto) {
-        UserDto response = userService.registerUser(registerDto);
+    public TokenDto registerUser(RegisterDto registerDto) {
+        userService.registerUser(registerDto);
         Authentication authenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated(registerDto.getEmail(), registerDto.getPassword());
         Authentication authenticationResponse = authenticationManager.authenticate(authenticationRequest);
-        response.setJwtToken(jwtService.generateJwtToken(authenticationResponse));
-        return response;
+        return new TokenDto(jwtService.generateJwtToken(authenticationResponse));
     }
 }
