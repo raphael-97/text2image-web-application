@@ -2,7 +2,7 @@
 
 import { Button } from "@nextui-org/react";
 import { useTheme } from "next-themes";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { MdOutlineLightMode } from "react-icons/md";
 import { MdOutlineDarkMode } from "react-icons/md";
 
