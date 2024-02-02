@@ -28,11 +28,11 @@ public class JwtService {
                 collect(Collectors.joining(","));
 
         JwtClaimsSet claim = JwtClaimsSet.builder()
-                .issuer("self")
+                .issuer("http://localhost.com")
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(expiresIn))
                 .subject(authentication.getName())
-                .claim("scope", roles)
+                .claim("authorities", roles)
                 .build();
 
         return jwtEncoder.encode(JwtEncoderParameters.from(claim)).getTokenValue();

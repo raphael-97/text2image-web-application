@@ -1,6 +1,5 @@
 package com.noCompany.BackendStableDiffusionWebApp.controller;
 
-import com.noCompany.BackendStableDiffusionWebApp.dto.UserDto;
 import com.noCompany.BackendStableDiffusionWebApp.dto.auth.LoginDto;
 import com.noCompany.BackendStableDiffusionWebApp.dto.auth.RegisterDto;
 import com.noCompany.BackendStableDiffusionWebApp.dto.auth.TokenDto;

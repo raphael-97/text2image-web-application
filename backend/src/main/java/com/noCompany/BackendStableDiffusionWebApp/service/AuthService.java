@@ -1,5 +1,6 @@
 package com.noCompany.BackendStableDiffusionWebApp.service;
 
+import com.noCompany.BackendStableDiffusionWebApp.dto.UserDto;
 import com.noCompany.BackendStableDiffusionWebApp.dto.auth.LoginDto;
 import com.noCompany.BackendStableDiffusionWebApp.dto.auth.RegisterDto;
 import com.noCompany.BackendStableDiffusionWebApp.dto.auth.TokenDto;
@@ -27,14 +28,15 @@ public class AuthService {
     }
 
     public TokenDto loginUser(LoginDto loginDto) {
-        Authentication authenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated(loginDto.getEmail(), loginDto.getPassword());
+        UserDto userByEmail = userService.getUserByEmail(loginDto.getEmail());
+        Authentication authenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated(userByEmail.getUsername(), loginDto.getPassword());
         Authentication authenticationResponse = authenticationManager.authenticate(authenticationRequest);
         return new TokenDto(jwtService.generateJwtToken(authenticationResponse));
     }
 
     public TokenDto registerUser(RegisterDto registerDto) {
         userService.registerUser(registerDto);
-        Authentication authenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated(registerDto.getEmail(), registerDto.getPassword());
+        Authentication authenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated(registerDto.getUsername(), registerDto.getPassword());
         Authentication authenticationResponse = authenticationManager.authenticate(authenticationRequest);
         return new TokenDto(jwtService.generateJwtToken(authenticationResponse));
     }

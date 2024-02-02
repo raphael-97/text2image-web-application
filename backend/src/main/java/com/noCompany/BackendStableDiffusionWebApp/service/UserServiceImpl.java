@@ -28,10 +28,10 @@ public class UserServiceImpl implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email)
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(
-                        String.format("User with email %s not in users database", email)
+                        String.format("User with username %s not in users database", username)
                 ));
     }
 
@@ -41,6 +41,14 @@ public class UserServiceImpl implements UserDetailsService {
         newUser.setRoles(Set.of("USER"));
         User savedUser = userRepository.save(newUser);
         return mapUserToUserDto(savedUser);
+    }
+
+    public UserDto findbyUsername(String username) {
+        Optional<User> UserByEmail = userRepository.findByUsername(username);
+        if (UserByEmail.isPresent()) {
+            return mapUserToUserDto(UserByEmail.get());
+        }
+        throw new UsernameNotFoundException(String.format("User with username %s not in users database", username));
     }
 
     public UserDto getUserByEmail(String email) {
