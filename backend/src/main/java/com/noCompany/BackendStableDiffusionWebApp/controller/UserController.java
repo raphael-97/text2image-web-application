@@ -1,6 +1,5 @@
 package com.noCompany.BackendStableDiffusionWebApp.controller;
-
-import com.noCompany.BackendStableDiffusionWebApp.dto.UserDto;
+import com.noCompany.BackendStableDiffusionWebApp.dto.UserResponse;
 import com.noCompany.BackendStableDiffusionWebApp.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,8 +22,8 @@ public class UserController {
 
     @GetMapping
     @RequestMapping("")
-    public ResponseEntity<UserDto> sayHello(JwtAuthenticationToken token) {
-        UserDto userDto = userService.findbyUsername(token.getName());
+    public ResponseEntity<UserResponse> getUserInfo(JwtAuthenticationToken token) {
+        UserResponse userDto = userService.findbyUsername(token.getName());
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 }

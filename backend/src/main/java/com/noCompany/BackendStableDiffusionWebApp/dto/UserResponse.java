@@ -1,4 +1,4 @@
-package com.noCompany.BackendStableDiffusionWebApp.dto.auth;
+package com.noCompany.BackendStableDiffusionWebApp.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Builder
-public class LoginDto {
+public class UserResponse {
+    private String username;
     private String email;
-    private String password;
+    private Long credits;
 }

@@ -1,5 +1,5 @@
 package com.noCompany.BackendStableDiffusionWebApp.domain;
-
+import com.noCompany.BackendStableDiffusionWebApp.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,10 +12,10 @@ import org.springframework.security.core.GrantedAuthority;
 @Builder
 public class Authority implements GrantedAuthority {
 
-    private String authority;
+    private Role authority;
 
     @Override
     public String getAuthority() {
-        return authority;
+        return authority.name();
     }
 }

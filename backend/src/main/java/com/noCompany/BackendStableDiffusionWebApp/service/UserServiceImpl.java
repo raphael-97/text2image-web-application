@@ -1,8 +1,10 @@
 package com.noCompany.BackendStableDiffusionWebApp.service;
 
 import com.noCompany.BackendStableDiffusionWebApp.domain.User;
-import com.noCompany.BackendStableDiffusionWebApp.dto.UserDto;
-import com.noCompany.BackendStableDiffusionWebApp.dto.auth.RegisterDto;
+import com.noCompany.BackendStableDiffusionWebApp.dto.UserResponse;
+import com.noCompany.BackendStableDiffusionWebApp.dto.auth.RegisterRequest;
+import com.noCompany.BackendStableDiffusionWebApp.enums.Provider;
+import com.noCompany.BackendStableDiffusionWebApp.enums.Role;
 import com.noCompany.BackendStableDiffusionWebApp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -35,15 +37,18 @@ public class UserServiceImpl implements UserDetailsService {
                 ));
     }
 
-    public UserDto registerUser(RegisterDto registerDto) {
-        User newUser = mapRegisterDtoToUser(registerDto);
-        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-        newUser.setRoles(Set.of("USER"));
-        User savedUser = userRepository.save(newUser);
-        return mapUserToUserDto(savedUser);
+    public User registerUser(RegisterRequest registerRequest) {
+        User newUser = mapRegisterDtoToUser(registerRequest);
+        if (registerRequest.getProvider() == Provider.self) {
+            newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        } else {
+            newUser.setProvider(registerRequest.getProvider());
+        }
+        newUser.setRoles(Set.of(Role.USER));
+        return userRepository.save(newUser);
     }
 
-    public UserDto findbyUsername(String username) {
+    public UserResponse findbyUsername(String username) {
         Optional<User> UserByEmail = userRepository.findByUsername(username);
         if (UserByEmail.isPresent()) {
             return mapUserToUserDto(UserByEmail.get());
@@ -51,15 +56,20 @@ public class UserServiceImpl implements UserDetailsService {
         throw new UsernameNotFoundException(String.format("User with username %s not in users database", username));
     }
 
-    public UserDto getUserByEmail(String email) {
+    public User getUserByEmail(String email) {
         Optional<User> UserByEmail = userRepository.findByEmail(email);
         if (UserByEmail.isPresent()) {
-            return mapUserToUserDto(UserByEmail.get());
+            return UserByEmail.get();
         }
         throw new UsernameNotFoundException(String.format("User with email %s not in users database", email));
     }
 
-    private User mapRegisterDtoToUser(RegisterDto registerDto) {
+
+    public Boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    private User mapRegisterDtoToUser(RegisterRequest registerDto) {
         return User.builder()
                 .username(registerDto.getUsername())
                 .email(registerDto.getEmail())
@@ -67,8 +77,8 @@ public class UserServiceImpl implements UserDetailsService {
                 .credits(5L)
                 .build();
     }
-    private UserDto mapUserToUserDto(User user) {
-        return UserDto.builder()
+    private UserResponse mapUserToUserDto(User user) {
+        return UserResponse.builder()
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .credits(user.getCredits())

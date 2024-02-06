@@ -1,9 +1,10 @@
 package com.noCompany.BackendStableDiffusionWebApp.service;
 
-import com.noCompany.BackendStableDiffusionWebApp.dto.UserDto;
-import com.noCompany.BackendStableDiffusionWebApp.dto.auth.LoginDto;
-import com.noCompany.BackendStableDiffusionWebApp.dto.auth.RegisterDto;
-import com.noCompany.BackendStableDiffusionWebApp.dto.auth.TokenDto;
+import com.noCompany.BackendStableDiffusionWebApp.domain.User;
+import com.noCompany.BackendStableDiffusionWebApp.dto.auth.LoginRequest;
+import com.noCompany.BackendStableDiffusionWebApp.dto.auth.RegisterRequest;
+import com.noCompany.BackendStableDiffusionWebApp.dto.auth.TokenResponse;
+import com.noCompany.BackendStableDiffusionWebApp.enums.Provider;
 import com.noCompany.BackendStableDiffusionWebApp.jwtutils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,26 +19,40 @@ public class AuthService {
     private final UserServiceImpl userService;
     private final JwtService jwtService;
 
+    private final RefreshTokenService refreshTokenService;
+
     @Autowired
     public AuthService(AuthenticationManager authenticationManager,
                        UserServiceImpl userService,
-                       JwtService jwtService) {
+                       JwtService jwtService,
+                       RefreshTokenService refreshTokenService) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
         this.jwtService = jwtService;
+        this.refreshTokenService = refreshTokenService;
     }
 
-    public TokenDto loginUser(LoginDto loginDto) {
-        UserDto userByEmail = userService.getUserByEmail(loginDto.getEmail());
+    public TokenResponse loginUser(LoginRequest loginDto) {
+        User userByEmail = userService.getUserByEmail(loginDto.getEmail());
+        if (userByEmail.getProvider() != Provider.self && userByEmail.getPassword() == null) {
+            throw new RuntimeException("User registered with an other Provider");
+        }
         Authentication authenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated(userByEmail.getUsername(), loginDto.getPassword());
         Authentication authenticationResponse = authenticationManager.authenticate(authenticationRequest);
-        return new TokenDto(jwtService.generateJwtToken(authenticationResponse));
+
+        return TokenResponse.builder()
+                .accessToken(jwtService.generateJwtToken(authenticationResponse))
+                .refreshToken(refreshTokenService.createRefreshToken(userByEmail).getRefreshToken())
+                .build();
     }
 
-    public TokenDto registerUser(RegisterDto registerDto) {
-        userService.registerUser(registerDto);
+    public TokenResponse registerUser(RegisterRequest registerDto) {
+        User user = userService.registerUser(registerDto);
         Authentication authenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated(registerDto.getUsername(), registerDto.getPassword());
         Authentication authenticationResponse = authenticationManager.authenticate(authenticationRequest);
-        return new TokenDto(jwtService.generateJwtToken(authenticationResponse));
+        return TokenResponse.builder()
+                .accessToken(jwtService.generateJwtToken(authenticationResponse))
+                .refreshToken(refreshTokenService.createRefreshToken(user).getRefreshToken())
+                .build();
     }
 }
