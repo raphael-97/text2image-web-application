@@ -1,4 +1,3 @@
-"use client";
 import {
   Avatar,
   Button,
@@ -11,32 +10,17 @@ import {
 } from "@nextui-org/react";
 
 import { ThemeSwitcher } from "../ThemeSwitcher";
-import { getUserData, isLoggedIn, logOutAction } from "@/app/lib/actions";
-import { useEffect, useState } from "react";
-import { UserDto } from "@/dto/userDto";
+import { logOutAction } from "@/app/lib/actions";
+import { useState } from "react";
+import { UserResponse } from "@/dto/userResponse";
 
-export default function ThemeSwitcherAvatar(props: { isAuthorized: boolean }) {
+export default function ThemeSwitcherAvatar(props: {
+  isAuthorized: boolean;
+  userData: UserResponse;
+}) {
   const [isAuthorized, setIsAuthorized] = useState(props.isAuthorized);
 
-  const initUserData: UserDto = {
-    username: "",
-    email: "",
-    credits: 0,
-  };
-
-  const [userData, setUserData] = useState<UserDto>(initUserData);
-
-  useEffect(() => {
-    const getUserLoggedin = async () => {
-      const isUserLoggedIn = await isLoggedIn();
-      setIsAuthorized(isUserLoggedIn);
-      if (isUserLoggedIn) {
-        const userDataResponse: UserDto = await getUserData();
-        setUserData(userDataResponse);
-      }
-    };
-    getUserLoggedin();
-  }, [props.isAuthorized]);
+  const [userData, setUserData] = useState<UserResponse>(props.userData);
 
   return (
     <NavbarContent justify="end">
@@ -57,6 +41,9 @@ export default function ThemeSwitcherAvatar(props: { isAuthorized: boolean }) {
             <DropdownItem key="profile" className="h-14 gap-2">
               <p className="font-semibold">Signed in as</p>
               <p className="font-semibold">{userData.email}</p>
+            </DropdownItem>
+            <DropdownItem key="credits">
+              credits: {userData.credits}
             </DropdownItem>
             <DropdownItem
               onClick={() => {

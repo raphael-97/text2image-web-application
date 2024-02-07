@@ -1,18 +1,19 @@
 "use server";
 
-import { LoginDto } from "../../dto/loginDto";
-import { RegisterDto } from "../../dto/registerDto";
+import { LoginRequest } from "../../dto/loginRequest";
+import { RegisterRequest } from "../../dto/registerRequest";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { UserDto } from "@/dto/userDto";
-import { tokenDto } from "@/dto/tokenDto";
+import { UserResponse } from "@/dto/userResponse";
+import { TokenResponse } from "@/dto/tokenResponse";
+import { RefreshTokenRequest } from "@/dto/refreshTokenRequest";
 
 const requestRegister = async (formData: FormData) => {
   const username = formData.get("username");
   const email = formData.get("email");
   const password = formData.get("password");
 
-  const registerData: RegisterDto = {
+  const registerData: RegisterRequest = {
     username: username,
     email: email,
     password: password,
@@ -39,7 +40,7 @@ const requestLogin = async (formData: FormData) => {
   const email = formData.get("email");
   const password = formData.get("password");
 
-  const loginData: LoginDto = {
+  const loginData: LoginRequest = {
     email: email,
     password: password,
   };
@@ -65,13 +66,21 @@ export async function registerAction(formData: FormData) {
   try {
     const data = await requestRegister(formData);
 
-    const userDto: tokenDto = {
+    const tokenResponse: TokenResponse = {
       ...data,
     };
 
-    cookies().set({
-      name: "token",
-      value: userDto.jwtToken,
+    await cookies().set({
+      name: "accessToken",
+      value: tokenResponse.accessToken,
+      httpOnly: true,
+      sameSite: true,
+      secure: true,
+    });
+
+    await cookies().set({
+      name: "refreshToken",
+      value: tokenResponse.refreshToken,
       httpOnly: true,
       sameSite: true,
       secure: true,
@@ -86,12 +95,20 @@ export async function loginAction(prevState: any, formData: FormData) {
   try {
     const data = await requestLogin(formData);
 
-    const userDto: tokenDto = {
+    const tokenResponse: TokenResponse = {
       ...data,
     };
-    cookies().set({
-      name: "token",
-      value: userDto.jwtToken,
+    await cookies().set({
+      name: "accessToken",
+      value: tokenResponse.accessToken,
+      httpOnly: true,
+      sameSite: true,
+      secure: true,
+    });
+
+    await cookies().set({
+      name: "refreshToken",
+      value: tokenResponse.refreshToken,
       httpOnly: true,
       sameSite: true,
       secure: true,
@@ -103,19 +120,27 @@ export async function loginAction(prevState: any, formData: FormData) {
 }
 
 export async function logOutAction() {
-  cookies().delete("token");
-  await redirect("/");
+  cookies().delete("accessToken");
+  cookies().delete("refreshToken");
+  redirect("/");
 }
 
 export async function isLoggedIn() {
-  if (cookies().get("token")) return true;
+  if (cookies().get("accessToken") && cookies().get("refreshToken"))
+    return true;
   return false;
 }
 
-export async function getUserData() {
+export async function removeTokens() {
+  cookies().delete("accessToken");
+  cookies().delete("refreshToken");
+  cookies().delete("JSESSION");
+}
+
+export async function fetchUserData() {
   return await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/user`, {
     headers: {
-      Authorization: `Bearer ${cookies().get("token")?.value}`,
+      Authorization: `Bearer ${await cookies().get("accessToken")?.value}`,
     },
   })
     .then((res) => {
@@ -124,10 +149,45 @@ export async function getUserData() {
       }
       return res.json();
     })
-    .then((resData) => {
-      const userData: UserDto = {
-        ...resData,
+    .then((data) => {
+      const userResponse: UserResponse = {
+        ...data,
       };
-      return userData;
+      return userResponse;
+    });
+}
+
+export async function handleGoogleLogin() {
+  await redirect(
+    `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/oauth2/authorization/google`
+  );
+}
+
+export async function getNewJwtAndRefreshToken(refreshTokenParam: string) {
+  const refreshTokenRequest: RefreshTokenRequest = {
+    refreshToken: refreshTokenParam,
+  };
+
+  return await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/auth/refreshtoken`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify(refreshTokenRequest),
+    }
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("RefreshToken is expired!");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      const tokenResponse: TokenResponse = {
+        ...data,
+      };
+      return tokenResponse;
     });
 }

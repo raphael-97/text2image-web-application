@@ -1,5 +1,5 @@
 "use client";
-import { registerAction } from "@/app/lib/actions";
+import { handleGoogleLogin, registerAction } from "@/app/lib/actions";
 import { Button, Input, Link, Divider } from "@nextui-org/react";
 
 export default function RegisterForm() {
@@ -46,7 +46,7 @@ export default function RegisterForm() {
       </div>
       <p className="text-center text-small pt-5">or continue with </p>
       <div className="flex flex-row items-center justify-center gap-3 mt-2">
-        <Link href="/">
+        <Link onClick={() => handleGoogleLogin()}>
           <img
             className="dark:hidden"
             src="web_light_rd_na.svg"

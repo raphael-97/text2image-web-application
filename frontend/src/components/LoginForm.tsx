@@ -1,7 +1,7 @@
 "use client";
 import { Button, Input, Link, Divider } from "@nextui-org/react";
-import { loginAction } from "@/app/lib/actions";
-import { useFormState, useFormStatus } from "react-dom";
+import { handleGoogleLogin, loginAction } from "@/app/lib/actions";
+import { useFormState } from "react-dom";
 
 const messageInit = "";
 
@@ -43,7 +43,7 @@ export default function LoginForm() {
       </div>
       <p className="text-center text-small pt-5">or continue with </p>
       <div className="flex flex-row items-center justify-center gap-3 mt-2">
-        <Link href="/">
+        <Link onClick={() => handleGoogleLogin()}>
           <img
             className="dark:hidden"
             src="web_light_rd_na.svg"

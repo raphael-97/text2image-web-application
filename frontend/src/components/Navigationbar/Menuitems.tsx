@@ -24,7 +24,7 @@ export default function Menuitems() {
       active: pathname === "/",
     },
     {
-      name: "Models",
+      name: "Explore",
       icon: <PiAlien />,
       link: "/models",
       active: pathname === "/models",
