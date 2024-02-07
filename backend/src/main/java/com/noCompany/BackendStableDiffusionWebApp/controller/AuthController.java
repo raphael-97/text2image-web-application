@@ -25,15 +25,13 @@ public class AuthController {
         this.refreshTokenService = refreshTokenService;
     }
 
-    @PostMapping
-    @RequestMapping("/register")
+    @PostMapping("/register")
     public ResponseEntity<TokenResponse> registerUser(@RequestBody RegisterRequest registerDto) {
         TokenResponse response = authService.registerUser(registerDto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PostMapping
-    @RequestMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<TokenResponse> loginUser(@RequestBody LoginRequest loginDto) {
         TokenResponse response = authService.loginUser(loginDto);
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);

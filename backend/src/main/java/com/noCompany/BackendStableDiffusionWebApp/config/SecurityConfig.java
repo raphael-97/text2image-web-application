@@ -4,10 +4,10 @@ import com.noCompany.BackendStableDiffusionWebApp.socialLogin.AuthenticationSucc
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -17,11 +17,15 @@ public class SecurityConfig {
     private final AuthenticationSuccessHandlerImpl authenticationSuccessHandler;
     private final AuthenticationFailureHandlerImpl authenticationFailureHandler;
 
+    private final JwtAuthenticationConverter jwtAuthenticationConverter;
+
     @Autowired
     public SecurityConfig(AuthenticationSuccessHandlerImpl authenticationSuccessHandler,
-                          AuthenticationFailureHandlerImpl authenticationFailureHandler) {
+                          AuthenticationFailureHandlerImpl authenticationFailureHandler,
+                          JwtAuthenticationConverter jwtAuthenticationConverter) {
         this.authenticationSuccessHandler = authenticationSuccessHandler;
         this.authenticationFailureHandler = authenticationFailureHandler;
+        this.jwtAuthenticationConverter = jwtAuthenticationConverter;
     }
 
     @Bean
@@ -29,11 +33,12 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/api/auth/**", "/api/models/**").permitAll()
+                        .requestMatchers("/api/models/**", "/api/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 //.httpBasic(Customizer.withDefaults())
-                .oauth2ResourceServer(configure -> configure.jwt(Customizer.withDefaults()))
+                .oauth2ResourceServer(configure -> configure.jwt(jwt ->
+                        jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)))
                 .oauth2Login(oauth2 -> oauth2
                         .successHandler(authenticationSuccessHandler)
                         .failureHandler(authenticationFailureHandler)

@@ -48,7 +48,7 @@ public class BackendStableDiffusionWebAppApplication implements CommandLineRunne
 		User user = User.builder()
 				.username("testuser")
 				.email("testuser@gmail.com")
-				.password(passwordEncoder.encode(passwordEncoder.encode("password")))
+				.password(passwordEncoder.encode("password"))
 				.provider(Provider.self)
 				.credits(100L)
 				.roles(Set.of(Role.USER, Role.ADMIN))
@@ -60,20 +60,16 @@ public class BackendStableDiffusionWebAppApplication implements CommandLineRunne
 		token.setUser(user);
 
 
-		if (!userRepository.findByUsername(user.getUsername()).isPresent())
-			userRepository.save(user);
+		userRepository.save(user);
 
-		if(!refreshTokenRepository.findByRefreshToken("secure").isPresent())
-			refreshTokenRepository.save(token);
-
+		refreshTokenRepository.save(token);
 
 		Model testModel = Model.builder()
 				.id(1L)
 				.name("Stable-Diffusion-2-1")
 				.inferenceUrl("https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1")
 				.build();
-		if(!modelRepository.existsById(1L)) {
-			modelRepository.save(testModel);
-		}
+
+		modelRepository.save(testModel);
 	}
 }

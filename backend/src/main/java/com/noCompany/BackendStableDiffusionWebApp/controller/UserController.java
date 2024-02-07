@@ -21,7 +21,6 @@ public class UserController {
     }
 
     @GetMapping
-    @RequestMapping("")
     public ResponseEntity<UserResponse> getUserInfo(JwtAuthenticationToken token) {
         UserResponse userDto = userService.findbyUsername(token.getName());
         return new ResponseEntity<>(userDto, HttpStatus.OK);

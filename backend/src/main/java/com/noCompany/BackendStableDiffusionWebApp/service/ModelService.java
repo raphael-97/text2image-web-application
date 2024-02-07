@@ -1,6 +1,7 @@
 package com.noCompany.BackendStableDiffusionWebApp.service;
 
 import com.noCompany.BackendStableDiffusionWebApp.domain.Model;
+import com.noCompany.BackendStableDiffusionWebApp.dto.ModelRequest;
 import com.noCompany.BackendStableDiffusionWebApp.dto.ModelResponse;
 import com.noCompany.BackendStableDiffusionWebApp.dto.huggingface.InferenceRequestToHuggingFace;
 import com.noCompany.BackendStableDiffusionWebApp.repository.ModelRepository;
@@ -58,6 +59,21 @@ public class ModelService {
         return ModelResponse.builder()
                 .id(model.getId())
                 .name(model.getName())
+                .build();
+    }
+
+    public ModelResponse createModel(ModelRequest modelRequest) {
+        Model model = Model.builder()
+                .name(modelRequest.getName())
+                .inferenceUrl(modelRequest.getInferenceUrl())
+                .imageUrl("Here save to cloud before saving the url here")
+                .build();
+
+        Model savedModel = modelRepository.save(model);
+
+        return ModelResponse.builder()
+                .name(savedModel.getName())
+                .imageUrl(savedModel.getImageUrl())
                 .build();
     }
 }
