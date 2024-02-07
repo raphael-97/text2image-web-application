@@ -7,6 +7,7 @@ import com.noCompany.BackendStableDiffusionWebApp.dto.auth.TokenResponse;
 import com.noCompany.BackendStableDiffusionWebApp.jwtutils.JwtService;
 import com.noCompany.BackendStableDiffusionWebApp.repository.RefreshTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,7 +17,7 @@ import java.util.UUID;
 @Service
 public class RefreshTokenService {
 
-    // 20 min
+    @Value("${app.refresh.token.expiry.secondstime}")
     private Long refreshTokenDurationSeconds = 60 * 20L;
 
     private final JwtService jwtService;

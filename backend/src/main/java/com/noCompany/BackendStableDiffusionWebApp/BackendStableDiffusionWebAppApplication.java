@@ -1,9 +1,11 @@
 package com.noCompany.BackendStableDiffusionWebApp;
 
+import com.noCompany.BackendStableDiffusionWebApp.domain.Model;
 import com.noCompany.BackendStableDiffusionWebApp.domain.RefreshToken;
 import com.noCompany.BackendStableDiffusionWebApp.domain.User;
 import com.noCompany.BackendStableDiffusionWebApp.enums.Provider;
 import com.noCompany.BackendStableDiffusionWebApp.enums.Role;
+import com.noCompany.BackendStableDiffusionWebApp.repository.ModelRepository;
 import com.noCompany.BackendStableDiffusionWebApp.repository.RefreshTokenRepository;
 import com.noCompany.BackendStableDiffusionWebApp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +25,16 @@ public class BackendStableDiffusionWebAppApplication implements CommandLineRunne
 
 	private final RefreshTokenRepository refreshTokenRepository;
 
+	private final ModelRepository modelRepository;
+
 	@Autowired
-	public BackendStableDiffusionWebAppApplication(UserRepository userRepository, PasswordEncoder passwordEncoder, RefreshTokenRepository refreshTokenRepository) {
+	public BackendStableDiffusionWebAppApplication(UserRepository userRepository, PasswordEncoder passwordEncoder,
+												   RefreshTokenRepository refreshTokenRepository,
+												   ModelRepository modelRepository) {
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.refreshTokenRepository = refreshTokenRepository;
+		this.modelRepository = modelRepository;
 	}
 
 	public static void main(String[] args) {
@@ -59,5 +66,14 @@ public class BackendStableDiffusionWebAppApplication implements CommandLineRunne
 		if(!refreshTokenRepository.findByRefreshToken("secure").isPresent())
 			refreshTokenRepository.save(token);
 
+
+		Model testModel = Model.builder()
+				.id(1L)
+				.name("Stable-Diffusion-2-1")
+				.inferenceUrl("https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1")
+				.build();
+		if(!modelRepository.existsById(1L)) {
+			modelRepository.save(testModel);
+		}
 	}
 }

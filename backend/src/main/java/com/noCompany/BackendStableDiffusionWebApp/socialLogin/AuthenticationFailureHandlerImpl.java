@@ -13,7 +13,6 @@ import java.io.IOException;
 public class AuthenticationFailureHandlerImpl implements AuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-        System.out.println("Oauth2 social login failed");
         response.sendRedirect("http://localhost:3000/login");
     }
 }

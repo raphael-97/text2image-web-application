@@ -74,6 +74,7 @@ public class UserServiceImpl implements UserDetailsService {
                 .username(registerDto.getUsername())
                 .email(registerDto.getEmail())
                 .password(registerDto.getPassword())
+                .provider(registerDto.getProvider())
                 .credits(5L)
                 .build();
     }

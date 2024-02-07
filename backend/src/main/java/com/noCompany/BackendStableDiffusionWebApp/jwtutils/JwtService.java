@@ -2,6 +2,7 @@ package com.noCompany.BackendStableDiffusionWebApp.jwtutils;
 
 import com.noCompany.BackendStableDiffusionWebApp.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,8 +21,8 @@ public class JwtService {
 
     private final UserServiceImpl userService;
 
-    // 10 min
-    private Long refreshTokenDurationSeconds = 60 * 10L;
+    @Value("${app.jwt.token.expiry.secondstime}")
+    private Long refreshTokenDurationSeconds;
 
     @Autowired
     public JwtService(JwtEncoder jwtEncoder, UserServiceImpl userService) {

@@ -47,6 +47,7 @@ public class AuthService {
     }
 
     public TokenResponse registerUser(RegisterRequest registerDto) {
+        registerDto.setProvider(Provider.self);
         User user = userService.registerUser(registerDto);
         Authentication authenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated(registerDto.getUsername(), registerDto.getPassword());
         Authentication authenticationResponse = authenticationManager.authenticate(authenticationRequest);
