@@ -2,12 +2,10 @@ package com.noCompany.BackendStableDiffusionWebApp.domain;
 import com.noCompany.BackendStableDiffusionWebApp.enums.Provider;
 import com.noCompany.BackendStableDiffusionWebApp.enums.Role;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -17,7 +15,8 @@ import java.util.stream.Collectors;
 @Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
 @Builder
 public class User implements UserDetails {
 
@@ -34,6 +33,7 @@ public class User implements UserDetails {
     private Provider provider;
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

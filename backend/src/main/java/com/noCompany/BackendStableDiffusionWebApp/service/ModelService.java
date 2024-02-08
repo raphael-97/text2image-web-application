@@ -28,7 +28,8 @@ public class ModelService {
     private String HUGGINGFACE_API_TOKEN;
 
     @Autowired
-    public ModelService(WebClient.Builder webClientBuilder, ModelRepository modelRepository) {
+    public ModelService(WebClient.Builder webClientBuilder, ModelRepository modelRepository,
+                        ImageStorageService imageStorageService) {
         this.webClientBuilder = webClientBuilder;
         this.modelRepository = modelRepository;
     }
@@ -48,6 +49,7 @@ public class ModelService {
                 .post()
                 .uri(model.getInferenceUrl())
                 .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.IMAGE_JPEG)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + HUGGINGFACE_API_TOKEN)
                 .body(BodyInserters.fromValue(inferenceRequestToHuggingFace))
                 .retrieve()
