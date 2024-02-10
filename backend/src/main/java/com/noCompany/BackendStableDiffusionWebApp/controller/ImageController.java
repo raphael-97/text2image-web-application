@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,22 +27,33 @@ public class ImageController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> uploadImage(MultipartFile file) throws IOException {
-        imageStorageService.storeUserImage(file);
-        String response = "Image uploaded successfully";
-
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    public ResponseEntity<String> uploadImage(MultipartFile file) {
+         try {
+             imageStorageService.storeUserImage(file);
+             String response = "Image uploaded successfully";
+             return new ResponseEntity<>(response, HttpStatus.CREATED);
+         } catch (IOException e) {
+             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Image could not be uploaded, try again!");
+         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<byte[]> getImage(@PathVariable Long id) throws IOException {
-        byte[] imageData = imageStorageService.getImageData(id);
-        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageData);
+    public ResponseEntity<byte[]> getImage(@PathVariable Long id) {
+         try {
+             byte[] imageData = imageStorageService.getImageData(id);
+             return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageData);
+         } catch (IOException e) {
+             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Image could not be downloaded, try again");
+         }
     }
 
     @GetMapping
     public ResponseEntity<List<ImageResponse>> getImages() {
-        List<ImageResponse> imageResponseList = imageStorageService.findAllImagesByUser();
-        return new ResponseEntity<>(imageResponseList, HttpStatus.OK);
+        try {
+            List<ImageResponse> imageResponseList = imageStorageService.findAllImagesByUser();
+            return new ResponseEntity<>(imageResponseList, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong.");
+        }
     }
 }

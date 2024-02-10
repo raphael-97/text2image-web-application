@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/auth")
+@ControllerAdvice
 public class AuthController {
 
     private final AuthService authService;
@@ -27,19 +29,31 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<TokenResponse> registerUser(@RequestBody RegisterRequest registerDto) {
-        TokenResponse response = authService.registerUser(registerDto);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        try {
+            TokenResponse response = authService.registerUser(registerDto);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (RuntimeException e) {
+            throw new ResponseStatusException(HttpStatus.FOUND, e.getMessage());
+        }
     }
 
     @PostMapping("/login")
     public ResponseEntity<TokenResponse> loginUser(@RequestBody LoginRequest loginDto) {
-        TokenResponse response = authService.loginUser(loginDto);
-        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+        try {
+            TokenResponse response = authService.loginUser(loginDto);
+            return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+        } catch (RuntimeException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not registered");
+        }
     }
 
     @PostMapping("/refreshtoken")
     public ResponseEntity<TokenResponse> getNewAccessAndRefreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
-        TokenResponse newAccessAndRefreshToken = refreshTokenService.getNewAccessAndRefreshToken(refreshTokenRequest);
-        return new ResponseEntity<>(newAccessAndRefreshToken, HttpStatus.OK);
+       try {
+           TokenResponse newAccessAndRefreshToken = refreshTokenService.getNewAccessAndRefreshToken(refreshTokenRequest);
+           return new ResponseEntity<>(newAccessAndRefreshToken, HttpStatus.OK);
+       } catch (RuntimeException e) {
+           throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
+       }
     }
 }

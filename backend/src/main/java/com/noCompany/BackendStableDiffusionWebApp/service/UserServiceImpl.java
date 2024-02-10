@@ -46,7 +46,11 @@ public class UserServiceImpl implements UserDetailsService {
             newUser.setProvider(registerRequest.getProvider());
         }
         newUser.setRoles(Set.of(Role.USER));
-        return userRepository.save(newUser);
+        try {
+            return userRepository.save(newUser);
+        } catch (Exception e) {
+            throw new RuntimeException("User already registered");
+        }
     }
 
     public UserResponse findbyUsername(String username) {
@@ -64,7 +68,6 @@ public class UserServiceImpl implements UserDetailsService {
         }
         throw new UsernameNotFoundException(String.format("User with email %s not in users database", email));
     }
-
 
     public Boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
