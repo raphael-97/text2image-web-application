@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -25,17 +26,16 @@ public class ImageController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> uploadImage(MultipartFile file) {
-
-        imageStorageService.storeImage(file);
+    public ResponseEntity<String> uploadImage(MultipartFile file) throws IOException {
+        imageStorageService.storeUserImage(file);
         String response = "Image uploaded successfully";
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<byte[]> getImage(@PathVariable Long id) {
-        byte[] imageData = imageStorageService.loadImage(id);
+    public ResponseEntity<byte[]> getImage(@PathVariable Long id) throws IOException {
+        byte[] imageData = imageStorageService.getImageData(id);
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageData);
     }
 

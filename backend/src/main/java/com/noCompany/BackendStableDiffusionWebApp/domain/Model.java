@@ -21,5 +21,6 @@ public class Model {
     @JsonIgnore
     private String inferenceUrl;
 
-    private String imageUrl;
+    @OneToOne
+    private Image image;
 }

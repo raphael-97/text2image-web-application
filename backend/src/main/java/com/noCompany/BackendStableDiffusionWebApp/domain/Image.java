@@ -22,4 +22,6 @@ public class Image {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
+
+    private boolean isModelThumbnail;
 }

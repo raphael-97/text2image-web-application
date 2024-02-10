@@ -1,6 +1,5 @@
 package com.noCompany.BackendStableDiffusionWebApp;
 
-import com.noCompany.BackendStableDiffusionWebApp.domain.Model;
 import com.noCompany.BackendStableDiffusionWebApp.domain.RefreshToken;
 import com.noCompany.BackendStableDiffusionWebApp.domain.User;
 import com.noCompany.BackendStableDiffusionWebApp.enums.Provider;
@@ -8,6 +7,7 @@ import com.noCompany.BackendStableDiffusionWebApp.enums.Role;
 import com.noCompany.BackendStableDiffusionWebApp.repository.ModelRepository;
 import com.noCompany.BackendStableDiffusionWebApp.repository.RefreshTokenRepository;
 import com.noCompany.BackendStableDiffusionWebApp.repository.UserRepository;
+import com.noCompany.BackendStableDiffusionWebApp.service.ImageStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -27,14 +27,18 @@ public class BackendStableDiffusionWebAppApplication implements CommandLineRunne
 
 	private final ModelRepository modelRepository;
 
+	private final ImageStorageService imageStorageService;
+
 	@Autowired
 	public BackendStableDiffusionWebAppApplication(UserRepository userRepository, PasswordEncoder passwordEncoder,
 												   RefreshTokenRepository refreshTokenRepository,
-												   ModelRepository modelRepository) {
+												   ModelRepository modelRepository,
+												   ImageStorageService imageStorageService) {
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.refreshTokenRepository = refreshTokenRepository;
 		this.modelRepository = modelRepository;
+		this.imageStorageService = imageStorageService;
 	}
 
 	public static void main(String[] args) {
@@ -59,17 +63,7 @@ public class BackendStableDiffusionWebAppApplication implements CommandLineRunne
 		token.setExpiryDate(LocalDateTime.now());
 		token.setUser(user);
 
-
 		userRepository.save(user);
-
 		refreshTokenRepository.save(token);
-
-		Model testModel = Model.builder()
-				.id(1L)
-				.name("Stable-Diffusion-2-1")
-				.inferenceUrl("https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1")
-				.build();
-
-		modelRepository.save(testModel);
 	}
 }

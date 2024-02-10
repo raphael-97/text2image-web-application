@@ -1,5 +1,6 @@
 package com.noCompany.BackendStableDiffusionWebApp.service;
 
+import com.noCompany.BackendStableDiffusionWebApp.domain.Image;
 import com.noCompany.BackendStableDiffusionWebApp.domain.Model;
 import com.noCompany.BackendStableDiffusionWebApp.dto.ModelRequest;
 import com.noCompany.BackendStableDiffusionWebApp.dto.ModelResponse;
@@ -10,9 +11,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,14 +27,19 @@ public class ModelService {
 
     private final ModelRepository modelRepository;
 
+    private final ImageStorageService imageStorageService;
+
     @Value("${app.huggingface.api.token}")
     private String HUGGINGFACE_API_TOKEN;
 
+
     @Autowired
-    public ModelService(WebClient.Builder webClientBuilder, ModelRepository modelRepository,
+    public ModelService(WebClient.Builder webClientBuilder,
+                        ModelRepository modelRepository,
                         ImageStorageService imageStorageService) {
         this.webClientBuilder = webClientBuilder;
         this.modelRepository = modelRepository;
+        this.imageStorageService = imageStorageService;
     }
 
     public List<ModelResponse> getAllModels() {
@@ -39,7 +47,7 @@ public class ModelService {
         return allSavedModels.stream().map(this::mapModelToModelResponse).collect(Collectors.toList());
     }
 
-    public byte[] sendInferenceWithModel(Long modelId, String input) {
+    public byte[] sendInferenceWithModel(Long modelId, String input) throws IOException {
         Optional<Model> modelByIdOpt = modelRepository.findById(modelId);
         Model model = modelByIdOpt.orElseThrow(() -> new RuntimeException("Model not found"));
 
@@ -57,25 +65,34 @@ public class ModelService {
                 .block();
     }
 
-    private ModelResponse mapModelToModelResponse(Model model) {
-        return ModelResponse.builder()
-                .id(model.getId())
-                .name(model.getName())
-                .build();
-    }
-
-    public ModelResponse createModel(ModelRequest modelRequest) {
+    public ModelResponse createModel(ModelRequest modelRequest, MultipartFile file) throws IOException {
+        Image image = imageStorageService.storeThumbnail(file);
         Model model = Model.builder()
                 .name(modelRequest.getName())
                 .inferenceUrl(modelRequest.getInferenceUrl())
-                .imageUrl("Here save to cloud before saving the url here")
+                .image(image)
                 .build();
 
         Model savedModel = modelRepository.save(model);
 
         return ModelResponse.builder()
+                .id(savedModel.getId())
                 .name(savedModel.getName())
-                .imageUrl(savedModel.getImageUrl())
+                .thumbnailImageId(savedModel.getImage().getId())
+                .build();
+    }
+
+    public byte[] getModelThumbnailById(Long id) throws IOException {
+        Model modelById = modelRepository.findById(id).orElseThrow(() -> new RuntimeException("Model does not exist"));
+        return imageStorageService.getThumbnailData(modelById.getImage().getId());
+    }
+
+
+    private ModelResponse mapModelToModelResponse(Model model) {
+        return ModelResponse.builder()
+                .id(model.getId())
+                .name(model.getName())
+                .thumbnailImageId(model.getImage().getId())
                 .build();
     }
 }

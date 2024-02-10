@@ -12,5 +12,4 @@ import lombok.NoArgsConstructor;
 public class ModelRequest {
     private String name;
     private String inferenceUrl;
-    private byte[] image;
 }

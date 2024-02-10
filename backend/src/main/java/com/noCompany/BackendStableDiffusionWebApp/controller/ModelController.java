@@ -11,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -28,7 +30,7 @@ public class ModelController {
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<byte[]> postInference(@RequestBody InferenceRequest inferenceRequest, @PathVariable Long id) {
+    public ResponseEntity<byte[]> postInference(@RequestBody InferenceRequest inferenceRequest, @PathVariable Long id) throws IOException {
         byte[] image = modelService.sendInferenceWithModel(id, inferenceRequest.getInputs());
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(image);
     }
@@ -38,10 +40,16 @@ public class ModelController {
         return new ResponseEntity<>(modelService.getAllModels(), HttpStatus.OK);
     }
 
-    @PostMapping
+    @GetMapping("/{id}")
+    public ResponseEntity<byte[]> getModelThumbnail(@PathVariable Long id) throws IOException {
+        byte[] imageData = modelService.getModelThumbnailById(id);
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageData);
+    }
+
+    @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ModelResponse> createModel(@RequestBody ModelRequest modelRequest) {
-        ModelResponse response = modelService.createModel(modelRequest);
+    public ResponseEntity<ModelResponse> createModel(@RequestPart MultipartFile file, @RequestPart ModelRequest modelRequest) throws IOException {
+        ModelResponse response = modelService.createModel(modelRequest, file);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }
