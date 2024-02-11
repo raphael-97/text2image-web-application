@@ -32,7 +32,7 @@ export default function LoginForm() {
         </Link>
       </p>
       <div className="pt-5">
-        <Button type="submit" fullWidth color="secondary">
+        <Button type="submit" fullWidth color="primary">
           Log in
         </Button>
         {errorMessage && <p>{errorMessage}</p>}

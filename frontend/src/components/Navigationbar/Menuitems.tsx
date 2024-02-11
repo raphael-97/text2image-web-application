@@ -26,8 +26,8 @@ export default function Menuitems() {
     {
       name: "Explore",
       icon: <PiAlien />,
-      link: "/models",
-      active: pathname === "/models",
+      link: "/explore",
+      active: pathname === "/explore",
     },
     {
       name: "Gallery",
@@ -44,27 +44,13 @@ export default function Menuitems() {
           <NavbarItem isActive={item.active} key={`NavbarItem_${index}`}>
             <Link
               className="gap-1"
-              color={item.active ? "secondary" : "foreground"}
+              color={item.active ? "primary" : "foreground"}
               href={item.link}
             >
               {item.icon} {item.name}
             </Link>
           </NavbarItem>
         ))}
-
-        <Input
-          classNames={{
-            base: "max-w-full sm:max-w-[10rem] h-10",
-            mainWrapper: "h-full",
-            input: "text-small",
-            inputWrapper:
-              "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
-          }}
-          placeholder="Search"
-          size="sm"
-          startContent={<FcSearch />}
-          type="search"
-        />
       </NavbarContent>
       <NavbarMenu className="gap-4">
         {menuItems.map((item, index) => (
@@ -74,7 +60,7 @@ export default function Menuitems() {
           >
             <Link
               className="gap-1"
-              color={item.active ? "secondary" : "foreground"}
+              color={item.active ? "primary" : "foreground"}
               href={item.link}
             >
               {item.icon} {item.name}{" "}

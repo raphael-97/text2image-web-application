@@ -35,12 +35,12 @@ export const Navigationbar = (props: {
           "after:w-0",
           "hover:after:w-full",
           "hover:after:h-[2px]",
-          "after:bg-secondary",
+          "after:bg-primary",
           "after:duration-300",
 
           "data-[active=true]:after:w-full",
           "data-[active=true]:after:h-[2px]",
-          "data-[active=true]:after:bg-secondary",
+          "data-[active=true]:after:bg-primary",
           "data-[active=true]:after:duration-0",
         ],
       }}

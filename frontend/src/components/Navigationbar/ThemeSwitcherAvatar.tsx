@@ -32,7 +32,7 @@ export default function ThemeSwitcherAvatar(props: {
               isBordered
               as="button"
               className="transition-transform"
-              color="secondary"
+              color="primary"
               size="sm"
               showFallback
             />

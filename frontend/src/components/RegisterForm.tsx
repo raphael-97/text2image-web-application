@@ -36,7 +36,7 @@ export default function RegisterForm() {
         </Link>
       </p>
       <div className="pt-5">
-        <Button type="submit" fullWidth color="secondary">
+        <Button type="submit" fullWidth color="primary">
           Sign up
         </Button>
       </div>
