@@ -7,6 +7,7 @@ import { cookies } from "next/headers";
 import { UserResponse } from "@/dto/userResponse";
 import { TokenResponse } from "@/dto/tokenResponse";
 import { RefreshTokenRequest } from "@/dto/refreshTokenRequest";
+import { ModelRequest } from "@/dto/modelRequest";
 
 const requestRegister = async (formData: FormData) => {
   const username = formData.get("username");
@@ -119,10 +120,40 @@ export async function loginAction(prevState: any, formData: FormData) {
   await redirect("/gallery");
 }
 
+export async function createModelAction(formData: FormData) {
+  const modelRequest: ModelRequest = {
+    name: formData.get("name"),
+    inferenceUrl: formData.get("inferenceUrl"),
+  };
+
+  const sendFormData = new FormData();
+
+  const file = formData.get("file");
+
+  if (file instanceof File) {
+    sendFormData.append("file", file, file.name);
+  }
+
+  sendFormData.append(
+    "modelRequest",
+    new Blob([JSON.stringify(modelRequest)], { type: "application/json" })
+  );
+
+  await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/models`, {
+    headers: {
+      Authorization: `Bearer ${await cookies().get("accessToken")?.value}`,
+    },
+    method: "POST",
+    body: sendFormData,
+  });
+
+  await redirect("/explore");
+}
+
 export async function logOutAction() {
   cookies().delete("accessToken");
   cookies().delete("refreshToken");
-  redirect("/");
+  await redirect("/");
 }
 
 export async function isLoggedIn() {
@@ -145,7 +176,7 @@ export async function fetchUserData() {
   })
     .then((res) => {
       if (!res.ok) {
-        throw new Error("Fetching User Data failed");
+        return;
       }
       return res.json();
     })

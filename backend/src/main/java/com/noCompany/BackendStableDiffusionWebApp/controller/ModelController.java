@@ -66,8 +66,7 @@ public class ModelController {
             ModelResponse response = modelService.createModel(modelRequest, file);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Thumbnail uploading failed, try again");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Model creation failed, try again");
         }
-
     }
 }

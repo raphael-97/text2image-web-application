@@ -7,6 +7,7 @@ import { useState } from "react";
 import Menuitems from "./Menuitems";
 import ThemeSwitcherAvatar from "./ThemeSwitcherAvatar";
 import { UserResponse } from "@/dto/userResponse";
+import Link from "next/link";
 
 export const Navigationbar = (props: {
   isAuthorized: boolean;
@@ -56,7 +57,9 @@ export const Navigationbar = (props: {
       ></NavbarMenuToggle>
 
       <NavbarBrand className="d-sm-none d-md-block">
-        <p className="font-bold">Text2Image</p>
+        <Link href={"/"} className="font-bold">
+          Text2Image
+        </Link>
       </NavbarBrand>
 
       <Menuitems />

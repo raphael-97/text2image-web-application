@@ -29,6 +29,14 @@ export default function RegisterForm() {
         placeholder="Enter your password"
         type="password"
       />
+      <Input
+        className="pt-5"
+        label="Password"
+        name="password"
+        isRequired
+        placeholder="Confirm your password"
+        type="password"
+      />
       <p className="text-center text-small pt-5">
         Already have an account?{" "}
         <Link href="/login" size="sm">

@@ -43,7 +43,7 @@ export default function ThemeSwitcherAvatar(props: {
               <p className="font-semibold">{userData.email}</p>
             </DropdownItem>
             <DropdownItem key="credits">
-              credits: {userData.credits}
+              Credits: {userData.credits}
             </DropdownItem>
             <DropdownItem
               onClick={() => {

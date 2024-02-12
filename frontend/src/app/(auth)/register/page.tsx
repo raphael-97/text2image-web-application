@@ -6,7 +6,7 @@ export default async function Register() {
     <div className="flex flex-col text-center mt-14 items-center">
       <p className="text-4xl">Sign Up Below</p>
 
-      <Card className="max-w-full w-[340px] h-[500px] mt-8">
+      <Card className="max-w-full w-[340px] h-[565px] mt-8">
         <CardBody>
           <RegisterForm />
         </CardBody>

@@ -4,7 +4,7 @@ import { ModelResponse } from "@/dto/modelResponse";
 export async function GET() {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/models`,
-    { next: { revalidate: 10 } }
+    { next: { revalidate: 0 } }
   );
 
   const data = await res.json();

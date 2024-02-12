@@ -54,5 +54,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/gallery/:path*"],
+  matcher: ["/gallery/:path*", "/explore/create/:path*"],
 };

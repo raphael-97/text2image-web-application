@@ -15,8 +15,8 @@ export const CardComponent = (props: { model: ModelResponse }) => {
       key={model.name}
       isPressable
       disableRipple
-      onPress={() => router.push(`/explore/${model.id}`)}
-      className="hover:scale-105 duration-1000 hover:bg-primary shadow-xl"
+      onPress={() => router.push(`/explore/${model.id}?name=${model.name}`)}
+      className="duration-1000 hover:scale-105 hover:bg-primary shadow-xl"
     >
       <CardBody className="overflow-hidden p-0 ">
         <Image
