@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-export const CardComponent = (props: { model: ModelResponse }) => {
+export const ModelCardComponent = (props: { model: ModelResponse }) => {
   const router = useRouter();
   const model = props.model;
 

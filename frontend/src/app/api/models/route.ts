@@ -1,5 +1,6 @@
 import { ErrorResponse } from "@/dto/errorResponse";
 import { ModelResponse } from "@/dto/modelResponse";
+import { NextResponse } from "next/server";
 
 export async function GET() {
   const res = await fetch(
@@ -12,7 +13,7 @@ export async function GET() {
     const errorResponse: ErrorResponse = {
       ...data,
     };
-    return errorResponse;
+    return new NextResponse(JSON.stringify(errorResponse));
   }
 
   const modelResponse: ModelResponse[] = data;

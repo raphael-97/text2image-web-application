@@ -2,7 +2,7 @@ import React from "react";
 import { GET } from "../api/models/route";
 import { ErrorResponse } from "@/dto/errorResponse";
 import { ModelResponse } from "@/dto/modelResponse";
-import { CardComponent } from "@/components/CardComponent";
+import { ModelCardComponent } from "@/components/ModelCardComponent";
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -48,7 +48,7 @@ export default async function Explore() {
       )}
       <div className=" gap-7 mx-64 my-8 grid grid-cols-1 sm:grid-cols-5">
         {models.map((model) => (
-          <CardComponent model={model}></CardComponent>
+          <ModelCardComponent model={model}></ModelCardComponent>
         ))}
       </div>
     </>
