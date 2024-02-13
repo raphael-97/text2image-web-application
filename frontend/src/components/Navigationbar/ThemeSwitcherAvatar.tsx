@@ -11,22 +11,51 @@ import {
 
 import { ThemeSwitcher } from "../ThemeSwitcher";
 import { logOutAction } from "@/app/lib/actions";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { UserResponse } from "@/dto/userResponse";
 
-export default function ThemeSwitcherAvatar(props: {
-  isAuthorized: boolean;
-  userData: UserResponse;
-}) {
-  const [isAuthorized, setIsAuthorized] = useState(props.isAuthorized);
+export default function ThemeSwitcherAvatar(props: { isAuthorized: boolean }) {
+  const [dropDownOpen, setDropDownOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userData, setUserData] = useState<UserResponse>({
+    username: "",
+    email: "",
+    credits: 0,
+  });
 
-  const [userData, setUserData] = useState<UserResponse>(props.userData);
+  useEffect(() => {
+    setIsLoggedIn(props.isAuthorized);
+  }, [props.isAuthorized]);
+
+  const fetchUserData = async (isOpen: boolean) => {
+    if (isOpen) {
+      const latestUserData = await fetch("/api/users");
+
+      if (latestUserData.ok) {
+        const data = await latestUserData.json();
+        console.log(data);
+        const userResponse: UserResponse = {
+          ...data,
+        };
+
+        console.log(userResponse);
+
+        await setUserData(userResponse);
+        setDropDownOpen(true);
+      }
+    }
+  };
 
   return (
     <NavbarContent justify="end">
       <ThemeSwitcher />
-      {isAuthorized ? (
-        <Dropdown placement="bottom-end">
+      {isLoggedIn ? (
+        <Dropdown
+          placement="bottom-end"
+          onOpenChange={(isOpen) => fetchUserData(isOpen)}
+          isOpen={dropDownOpen}
+          onClose={() => setDropDownOpen(false)}
+        >
           <DropdownTrigger>
             <Avatar
               isBordered
@@ -47,8 +76,8 @@ export default function ThemeSwitcherAvatar(props: {
             </DropdownItem>
             <DropdownItem
               onClick={() => {
+                setIsLoggedIn(false);
                 logOutAction();
-                setIsAuthorized(false);
               }}
               key="logout"
               color="danger"

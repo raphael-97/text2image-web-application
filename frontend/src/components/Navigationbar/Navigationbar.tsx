@@ -6,13 +6,9 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { useState } from "react";
 import Menuitems from "./Menuitems";
 import ThemeSwitcherAvatar from "./ThemeSwitcherAvatar";
-import { UserResponse } from "@/dto/userResponse";
 import Link from "next/link";
 
-export const Navigationbar = (props: {
-  isAuthorized: boolean;
-  userData: UserResponse;
-}) => {
+export const Navigationbar = (props: { isAuthorized: boolean }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -64,10 +60,7 @@ export const Navigationbar = (props: {
 
       <Menuitems />
 
-      <ThemeSwitcherAvatar
-        isAuthorized={props.isAuthorized}
-        userData={props.userData}
-      />
+      <ThemeSwitcherAvatar isAuthorized={props.isAuthorized} />
     </Navbar>
   );
 };

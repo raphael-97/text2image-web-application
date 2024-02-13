@@ -18,28 +18,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const loggedIn = cookies().get("accessToken") ? true : false;
-
-  const initUserData: UserResponse = {
-    username: "",
-    email: "",
-    credits: 0,
-  };
-
-  var userResponse: UserResponse = initUserData;
-
-  if (loggedIn) {
-    userResponse = await fetchUserData();
-  }
+  const loggedIn = cookies().has("accessToken");
 
   return (
     <html lang="en">
       <body className={inter.className}>
         <Providers>
-          <Navigationbar
-            isAuthorized={loggedIn}
-            userData={userResponse}
-          ></Navigationbar>
+          <Navigationbar isAuthorized={loggedIn}></Navigationbar>
           {children}
         </Providers>
       </body>

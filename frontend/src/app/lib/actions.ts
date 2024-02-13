@@ -153,7 +153,7 @@ export async function createModelAction(formData: FormData) {
 export async function logOutAction() {
   cookies().delete("accessToken");
   cookies().delete("refreshToken");
-  await redirect("/");
+  redirect("/");
 }
 
 export async function isLoggedIn() {
