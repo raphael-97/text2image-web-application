@@ -36,7 +36,7 @@ export default async function Explore() {
   return (
     <>
       {isAdmin ? (
-        <div className="flex justify-center items-center mt-10">
+        <div className="flex justify-center items-center mt-16">
           <Link href={"/explore/create"}>
             <Button disableRipple href={"/explore/create"}>
               New model
@@ -46,9 +46,9 @@ export default async function Explore() {
       ) : (
         <></>
       )}
-      <div className=" gap-7 mx-64 my-8 grid grid-cols-1 sm:grid-cols-5">
-        {models.map((model) => (
-          <ModelCardComponent model={model}></ModelCardComponent>
+      <div className="gap-7 mt-16 mx-4 md:mx-8 xl:mx-16 my-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        {models.map((model, index) => (
+          <ModelCardComponent key={index} model={model} />
         ))}
       </div>
     </>

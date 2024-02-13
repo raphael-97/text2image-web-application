@@ -2,14 +2,19 @@ import { Modal, ModalBody, ModalContent } from "@nextui-org/react";
 import Image from "next/image";
 import React from "react";
 
-export default function page({ params }: { params: { id: string } }) {
+export default function InterceptingModal({
+  params,
+}: {
+  params: { id: string };
+}) {
   return (
     <Modal
       defaultOpen
       backdrop="opaque"
       hideCloseButton
       className="bg-inherit shadow-none"
-      size="3xl"
+      size="lg"
+      placement="top-center"
     >
       <ModalContent>
         <ModalBody>

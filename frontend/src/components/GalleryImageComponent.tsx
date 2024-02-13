@@ -5,7 +5,7 @@ import React from "react";
 export default function GalleryImageComponent(props: { id: number }) {
   return (
     <div>
-      <Link key={props.id} href={`/gallery/${props.id}`}>
+      <Link key={props.id} href={`/gallery/${props.id}`} scroll={false}>
         <Image
           src={`/api/images/${props.id}`}
           alt={`img_${props.id}`}
