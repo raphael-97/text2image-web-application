@@ -1,4 +1,3 @@
-import { ImageResponse } from "@/dto/imageResponse";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -11,9 +10,11 @@ export async function GET() {
       },
     }
   );
+  if (!data.ok) {
+    throw new Error("Failed to fetch user's images");
+  }
 
-  const userImages: ImageResponse[] = await data.json();
-  return userImages;
+  return data;
 }
 
 export async function POST(req: NextRequest) {

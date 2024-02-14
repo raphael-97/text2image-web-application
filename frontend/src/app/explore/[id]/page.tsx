@@ -7,7 +7,11 @@ import { useSearchParams } from "next/navigation";
 import { GrGallery } from "react-icons/gr";
 import { IoDownloadOutline } from "react-icons/io5";
 
-export default function page({ params: { id } }: { params: { id: string } }) {
+export default function ModelView({
+  params: { id },
+}: {
+  params: { id: string };
+}) {
   const searchParams = useSearchParams();
   const modelName = searchParams.get("name");
   const [value, setValue] = useState<string>("");

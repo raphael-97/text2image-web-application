@@ -16,7 +16,7 @@ import { UserResponse } from "@/dto/userResponse";
 
 export default function ThemeSwitcherAvatar(props: { isAuthorized: boolean }) {
   const [dropDownOpen, setDropDownOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(props.isAuthorized);
   const [userData, setUserData] = useState<UserResponse>({
     username: "",
     email: "",

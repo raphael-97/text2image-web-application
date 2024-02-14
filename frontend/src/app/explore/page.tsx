@@ -14,8 +14,8 @@ interface JwtToken {
 }
 
 export default async function Explore() {
-  const models: ModelResponse[] | ErrorResponse = await GET();
-
+  const data = await GET();
+  const models: ModelResponse[] = await data.json();
   const renderCards = Array.isArray(models);
 
   const jwt = cookies().get("accessToken");

@@ -10,12 +10,7 @@ export async function GET() {
 
   const data = await res.json();
   if (!res.ok) {
-    const errorResponse: ErrorResponse = {
-      ...data,
-    };
-    return new NextResponse(JSON.stringify(errorResponse));
+    return NextResponse.json(data);
   }
-
-  const modelResponse: ModelResponse[] = data;
-  return modelResponse;
+  return NextResponse.json(data);
 }

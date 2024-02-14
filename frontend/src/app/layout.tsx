@@ -4,8 +4,6 @@ import "./globals.css";
 import { Navigationbar } from "@/components/Navigationbar/Navigationbar";
 import { Providers } from "@/components/Providers";
 import { cookies } from "next/headers";
-import { UserResponse } from "@/dto/userResponse";
-import { fetchUserData } from "./lib/actions";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
