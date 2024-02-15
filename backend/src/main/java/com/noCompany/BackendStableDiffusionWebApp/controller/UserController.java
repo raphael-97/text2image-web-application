@@ -28,7 +28,7 @@ public class UserController {
             UserResponse userDto = userService.findbyUsername(token.getName());
             return new ResponseEntity<>(userDto, HttpStatus.OK);
         } catch (UsernameNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User can't be found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User can not be found");
         }
     }
 }
