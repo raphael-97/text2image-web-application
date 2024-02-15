@@ -1,8 +1,8 @@
 "use client";
 import { Button, Input, Link, Divider } from "@nextui-org/react";
-import { handleGoogleLogin, loginAction } from "@/app/lib/actions";
 import { useFormState } from "react-dom";
-import Image from "next/image";
+import { loginAction } from "@/app/lib/authActions";
+import SocialLoginComponent from "./SocialLoginComponent";
 
 const messageInit = "";
 
@@ -36,30 +36,20 @@ export default function LoginForm() {
         <Button type="submit" fullWidth color="primary">
           Log in
         </Button>
-        {errorMessage && <p>{errorMessage}</p>}
       </div>
 
+      {errorMessage && (
+        <div className="flex justify-center items-center">
+          <p className="mt-5 text-danger">{errorMessage}</p>
+        </div>
+      )}
+
       <div className="flex">
-        <Divider className="mt-8" />
+        <Divider className="mt-6" />
       </div>
       <p className="text-center text-small pt-5">or continue with </p>
       <div className="flex flex-row items-center justify-center gap-3 mt-2">
-        <Link onClick={() => handleGoogleLogin()}>
-          <Image
-            className="dark:hidden"
-            src="web_light_rd_na.svg"
-            alt="Google Logo"
-            width={40}
-            height={40}
-          />
-          <Image
-            className="hidden dark:flex"
-            src="web_dark_rd_na.svg"
-            alt="Google Logo"
-            width={40}
-            height={40}
-          />
-        </Link>
+        <SocialLoginComponent />
       </div>
     </form>
   );

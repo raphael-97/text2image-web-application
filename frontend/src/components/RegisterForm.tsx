@@ -1,11 +1,15 @@
 "use client";
-import { handleGoogleLogin, registerAction } from "@/app/lib/actions";
+import { registerAction } from "@/app/lib/authActions";
 import { Button, Input, Link, Divider } from "@nextui-org/react";
-import Image from "next/image";
+import SocialLoginComponent from "./SocialLoginComponent";
+import { useFormState } from "react-dom";
+
+const messageInit = "";
 
 export default function RegisterForm() {
+  const [errorMessage, action] = useFormState(registerAction, messageInit);
   return (
-    <form action={registerAction} className="px-5">
+    <form action={action} className="px-5">
       <Input
         className="pt-5"
         label="Name"
@@ -33,7 +37,7 @@ export default function RegisterForm() {
       <Input
         className="pt-5"
         label="Password"
-        name="password"
+        name="confirmPassword"
         isRequired
         placeholder="Confirm your password"
         type="password"
@@ -49,28 +53,18 @@ export default function RegisterForm() {
           Sign up
         </Button>
       </div>
+      {errorMessage && (
+        <div className="flex justify-center items-center">
+          <p className="mt-5 text-danger">{errorMessage}</p>
+        </div>
+      )}
 
       <div className="flex">
         <Divider className="mt-8" />
       </div>
       <p className="text-center text-small pt-5">or continue with </p>
       <div className="flex flex-row items-center justify-center gap-3 mt-2">
-        <Link onClick={() => handleGoogleLogin()}>
-          <Image
-            className="dark:hidden"
-            src="web_light_rd_na.svg"
-            alt="Google Logo"
-            width={40}
-            height={40}
-          />
-          <Image
-            className="hidden dark:flex"
-            src="web_dark_rd_na.svg"
-            alt="Google Logo"
-            width={40}
-            height={40}
-          />
-        </Link>
+        <SocialLoginComponent />
       </div>
     </form>
   );
