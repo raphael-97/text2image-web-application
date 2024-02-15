@@ -11,10 +11,15 @@ import {
 import { useEffect, useState } from "react";
 import { UserResponse } from "@/dto/userResponse";
 import { logOutAction } from "@/app/lib/authActions";
+import { useRouter } from "next/navigation";
+import { ServerResponse } from "@/dto/errorResponse";
 
 export default function AvatarComponent(props: { isAuthorized: boolean }) {
-  const [dropDownOpen, setDropDownOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(props.isAuthorized);
+  const [dropDownOpen, setDropDownOpen] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(props.isAuthorized);
+
+  const router = useRouter();
+
   const [userData, setUserData] = useState<UserResponse>({
     username: "",
     email: "",
@@ -27,10 +32,12 @@ export default function AvatarComponent(props: { isAuthorized: boolean }) {
 
   const fetchUserData = async (isOpen: boolean) => {
     if (isOpen) {
-      const latestUserData = await fetch("/api/users");
-
-      if (latestUserData.ok) {
-        const data = await latestUserData.json();
+      const res = await fetch("/api/users");
+      if (!res.ok && res.status !== 302) {
+        router.push("/login");
+      }
+      if (res.status === 302) {
+        const data = await res.json();
 
         const userResponse: UserResponse = {
           ...data,
@@ -38,7 +45,11 @@ export default function AvatarComponent(props: { isAuthorized: boolean }) {
 
         await setUserData(userResponse);
         setDropDownOpen(true);
+        return;
       }
+
+      const serverResponse: ServerResponse = await res.json();
+      console.error(serverResponse.message);
     }
   };
   return (
@@ -61,11 +72,15 @@ export default function AvatarComponent(props: { isAuthorized: boolean }) {
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">
-            <DropdownItem key="profile" className="h-14 gap-2">
+            <DropdownItem
+              textValue="accessibility"
+              key="profile"
+              className="h-14 gap-2"
+            >
               <p className="font-semibold">Signed in as</p>
               <p className="font-semibold">{userData.email}</p>
             </DropdownItem>
-            <DropdownItem key="credits">
+            <DropdownItem textValue="accessibility" key="credits">
               Credits: {userData.credits}
             </DropdownItem>
             <DropdownItem

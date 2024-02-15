@@ -1,6 +1,5 @@
 "use client";
 import {
-  Input,
   Link,
   NavbarContent,
   NavbarItem,
@@ -10,7 +9,6 @@ import {
 import { AiOutlineHome } from "react-icons/ai";
 import { GrGallery } from "react-icons/gr";
 import { PiAlien } from "react-icons/pi";
-import { FcSearch } from "react-icons/fc";
 import { usePathname } from "next/navigation";
 
 export default function Menuitems() {

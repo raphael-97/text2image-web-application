@@ -24,7 +24,7 @@ export async function GET(
     );
 
     if (res.status === 401) {
-      redirect("/login");
+      throw new Error("User is unauthorized to access this resource");
     }
 
     if (!res.ok) {

@@ -20,6 +20,7 @@ export const ModelCardComponent = (props: { model: ModelResponse }) => {
     >
       <CardBody className="overflow-hidden p-0 ">
         <Image
+          priority
           src={`/api/models/${model.thumbnailImageId}`}
           alt={model.name}
           width={1000}

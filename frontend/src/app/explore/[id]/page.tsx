@@ -23,7 +23,7 @@ export default function ModelView({
   const modelName = searchParams.get("name");
   const [value, setValue] = useState<string>("");
   const [imageUrl, setImageUrl] = useState<string>("");
-  const [imageBlob, setImageBlob] = useState<Blob>();
+  const [imageBlob, setImageBlob] = useState<Blob | null>(null);
   const [loading, setIsLoading] = useState<boolean>(false);
   const [imageGenerationErrorMsg, setImageGenerationErrorMsg] =
     useState<string>("");

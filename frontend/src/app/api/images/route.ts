@@ -25,7 +25,7 @@ export async function GET() {
 
     // User has wrong or manipulated token
     if (res.status === 401) {
-      redirect("/login");
+      throw new Error("User is unauthorized to access this resource");
     }
 
     if (!res.ok) {
