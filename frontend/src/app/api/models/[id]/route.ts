@@ -1,3 +1,5 @@
+import { ServerResponse } from "@/dto/errorResponse";
+import { ResourceServerResponse } from "@/dto/resourceServerResponse";
 import { NextRequest } from "next/server";
 
 interface ModelInput {
@@ -25,21 +27,34 @@ export async function POST(
     inputs: inputs,
   };
 
-  console.log(modelInput.inputs);
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/models/${params.id}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify(modelInput),
+      }
+    );
 
-  console.log("Start generating image");
-  const imageData = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/models/${params.id}`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-      body: JSON.stringify(modelInput),
+    if (!res.ok) {
+      const errorResponse: ResourceServerResponse = await res.json();
+      const serverResponse: ServerResponse = {
+        success: false,
+        message: errorResponse.message,
+      };
+      return Response.json(serverResponse, { status: 200 });
     }
-  );
+    const blob = await res.blob();
 
-  console.log("Image done");
-
-  return imageData;
+    return new Response(blob, { status: 201 });
+  } catch (error) {
+    const serverResponse: ServerResponse = {
+      success: false,
+      message: "Resource Server not reachable, try again",
+    };
+    return Response.json(serverResponse, { status: 200 });
+  }
 }

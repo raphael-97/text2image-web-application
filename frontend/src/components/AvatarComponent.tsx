@@ -31,12 +31,10 @@ export default function AvatarComponent(props: { isAuthorized: boolean }) {
 
       if (latestUserData.ok) {
         const data = await latestUserData.json();
-        console.log(data);
+
         const userResponse: UserResponse = {
           ...data,
         };
-
-        console.log(userResponse);
 
         await setUserData(userResponse);
         setDropDownOpen(true);

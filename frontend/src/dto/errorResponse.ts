@@ -1,7 +1,4 @@
-export type ErrorResponse = {
-  timestamp: string;
-  status: number;
-  error: string;
+export type ServerResponse = {
+  success: boolean;
   message: string;
-  path: string;
 };

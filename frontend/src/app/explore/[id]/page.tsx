@@ -1,11 +1,18 @@
 "use client";
-import { Button, Textarea } from "@nextui-org/react";
+import {
+  Button,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  Textarea,
+} from "@nextui-org/react";
 import Image from "next/image";
 import React, { useState } from "react";
 import { CiImageOn } from "react-icons/ci";
 import { useSearchParams } from "next/navigation";
 import { GrGallery } from "react-icons/gr";
 import { IoDownloadOutline } from "react-icons/io5";
+import { ServerResponse } from "@/dto/errorResponse";
 
 export default function ModelView({
   params: { id },
@@ -18,40 +25,79 @@ export default function ModelView({
   const [imageUrl, setImageUrl] = useState<string>("");
   const [imageBlob, setImageBlob] = useState<Blob>();
   const [loading, setIsLoading] = useState<boolean>(false);
+  const [imageGenerationErrorMsg, setImageGenerationErrorMsg] =
+    useState<string>("");
+
+  const [disableUpload, setDisableUpload] = useState<boolean>(false);
+
+  const [popOverColor, setPopOverColor] = useState<"success" | "danger">(
+    "success"
+  );
+  const [popOverMessage, setPopOverMessage] = useState<string>("");
 
   const generateImage = async () => {
     setIsLoading(true);
-    const resData = await fetch(`/api/models/${id}`, {
-      method: "POST",
-      body: JSON.stringify(value),
-    });
+    setImageGenerationErrorMsg("");
+    try {
+      const resData = await fetch(`/api/models/${id}`, {
+        method: "POST",
+        body: JSON.stringify(value),
+      });
 
-    if (!resData.ok) {
-      await setImageUrl("");
-      setIsLoading(false);
-      return;
+      if (resData.status === 201) {
+        await resData.blob().then((blob) => {
+          setImageUrl(URL.createObjectURL(blob));
+          setImageBlob(blob);
+        });
+      }
+
+      if (resData.status === 200) {
+        const errorResponse: ServerResponse = await resData.json();
+        setImageGenerationErrorMsg(errorResponse.message);
+        setImageUrl("");
+      }
+
+      if (!resData.ok) {
+        setImageGenerationErrorMsg("Server is not reachable, try again!");
+      }
+    } catch (error) {
+      setImageGenerationErrorMsg("Server is not reachable, try again!");
     }
-
-    await resData.blob().then((blob) => {
-      setImageUrl(URL.createObjectURL(blob));
-      setImageBlob(blob);
-    });
 
     setIsLoading(false);
   };
 
   const uploadToGallery = async () => {
     if (imageBlob) {
+      setDisableUpload(true);
+
       const imageFile = new File([imageBlob], "image.jpg");
 
       const sendFormData = new FormData();
 
       sendFormData.append("file", imageFile, imageFile.name);
 
-      await fetch(`/api/images`, {
-        method: "POST",
-        body: sendFormData,
-      });
+      try {
+        const res = await fetch(`/api/images`, {
+          method: "POST",
+          body: sendFormData,
+        });
+
+        if (!res.ok) {
+          setPopOverMessage("Server is not reachable, try again!");
+          setPopOverColor("danger");
+          return;
+        }
+
+        const serverResponse: ServerResponse = await res.json();
+
+        serverResponse.success
+          ? setPopOverColor("success")
+          : setPopOverColor("danger");
+        setPopOverMessage(serverResponse.message);
+      } catch (error) {
+        setPopOverMessage("Server is not reachable, try again!");
+      }
     }
   };
 
@@ -71,14 +117,29 @@ export default function ModelView({
                   <IoDownloadOutline size={38}></IoDownloadOutline>
                 </Button>
               </a>
-              <Button
-                onClick={uploadToGallery}
-                disableRipple
-                className=" bg-transparent"
-                isIconOnly
+              <Popover
+                placement="right"
+                showArrow
+                color={popOverColor}
+                onClose={() => setDisableUpload(false)}
               >
-                <GrGallery size={30} />
-              </Button>
+                <PopoverTrigger>
+                  <Button
+                    onClick={() => uploadToGallery()}
+                    disableRipple
+                    className=" bg-transparent"
+                    isIconOnly
+                    isDisabled={disableUpload}
+                  >
+                    <GrGallery size={30} />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <div className="px-1 py-2">
+                    <div className="text-small font-bold">{popOverMessage}</div>
+                  </div>
+                </PopoverContent>
+              </Popover>
             </div>
             <div>
               <Image
@@ -95,6 +156,13 @@ export default function ModelView({
           </div>
         )}
       </div>
+      {imageGenerationErrorMsg ? (
+        <div className="flex justify-center align-middle mt-5">
+          <p className=" text-danger">{imageGenerationErrorMsg}</p>
+        </div>
+      ) : (
+        <></>
+      )}
 
       <div className="mt-5 flex items-center">
         <Textarea
