@@ -10,11 +10,22 @@ export async function GET(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/models/${params.id}`,
-    { next: { revalidate: 0 } }
-  );
-  return res;
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/models/${params.id}`,
+      { next: { revalidate: 0 } }
+    );
+
+    if (!res.ok) {
+      const errorResponse: ResourceServerResponse = await res.json();
+      throw new Error(errorResponse.message);
+    }
+
+    const blob = await res.blob();
+    return new Response(blob);
+  } catch (error) {
+    throw new Error("Resource Server not reachable, try again");
+  }
 }
 
 export async function POST(

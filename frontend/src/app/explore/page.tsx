@@ -1,11 +1,9 @@
 import React from "react";
 import { GET } from "../api/models/route";
-import { ErrorResponse } from "@/dto/errorResponse";
 import { ModelResponse } from "@/dto/modelResponse";
 import { ModelCardComponent } from "@/components/ModelCardComponent";
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { Button } from "@nextui-org/react";
 import Link from "next/link";
 
@@ -16,7 +14,6 @@ interface JwtToken {
 export default async function Explore() {
   const data = await GET();
   const models: ModelResponse[] = await data.json();
-  const renderCards = Array.isArray(models);
 
   const jwt = cookies().get("accessToken");
 
@@ -27,10 +24,6 @@ export default async function Explore() {
     if (decodedjwt.authorities.includes("ADMIN")) {
       isAdmin = true;
     }
-  }
-
-  if (!renderCards) {
-    redirect("/");
   }
 
   return (
