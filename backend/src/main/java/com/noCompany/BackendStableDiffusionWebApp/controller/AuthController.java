@@ -33,7 +33,7 @@ public class AuthController {
             TokenResponse response = authService.registerUser(registerDto);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (RuntimeException e) {
-            throw new ResponseStatusException(HttpStatus.FOUND, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, e.getMessage());
         }
     }
 
@@ -43,7 +43,7 @@ public class AuthController {
             TokenResponse response = authService.loginUser(loginDto);
             return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
         } catch (RuntimeException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not registered");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Wrong credentials");
         }
     }
 

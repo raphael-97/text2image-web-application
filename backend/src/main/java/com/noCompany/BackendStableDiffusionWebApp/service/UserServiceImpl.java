@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserDetailsService {
         try {
             return userRepository.save(newUser);
         } catch (Exception e) {
-            throw new RuntimeException("User already registered");
+            throw new RuntimeException("Email already registered");
         }
     }
 
