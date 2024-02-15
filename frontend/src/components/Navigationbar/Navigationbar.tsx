@@ -1,12 +1,18 @@
 "use client";
 
-import { Navbar, NavbarBrand, NavbarMenuToggle } from "@nextui-org/react";
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarMenuToggle,
+} from "@nextui-org/react";
 
 import { RxHamburgerMenu } from "react-icons/rx";
 import { useState } from "react";
 import Menuitems from "./Menuitems";
-import ThemeSwitcherAvatar from "./ThemeSwitcherAvatar";
 import Link from "next/link";
+import { ThemeSwitcher } from "../ThemeSwitcher";
+import AvatarComponent from "../AvatarComponent";
 
 export const Navigationbar = (props: { isAuthorized: boolean }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -60,7 +66,10 @@ export const Navigationbar = (props: { isAuthorized: boolean }) => {
 
       <Menuitems />
 
-      <ThemeSwitcherAvatar isAuthorized={props.isAuthorized} />
+      <NavbarContent justify="end">
+        <ThemeSwitcher />
+        <AvatarComponent isAuthorized={props.isAuthorized} />
+      </NavbarContent>
     </Navbar>
   );
 };

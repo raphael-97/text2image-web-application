@@ -1,9 +1,10 @@
 "use client";
 import React from "react";
-import { createModelAction } from "@/app/lib/actions";
+import { createModelAction } from "@/app/lib/modelActions";
 import { Button, Input } from "@nextui-org/react";
 import { useRef, useState } from "react";
 import { MdOutlineFileUpload } from "react-icons/md";
+
 export default function CreateModelForm() {
   const [pathValue, setPathValue] = useState("");
 

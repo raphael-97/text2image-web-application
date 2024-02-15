@@ -6,15 +6,13 @@ import {
   DropdownMenu,
   DropdownTrigger,
   Link,
-  NavbarContent,
 } from "@nextui-org/react";
 
-import { ThemeSwitcher } from "../ThemeSwitcher";
-import { logOutAction } from "@/app/lib/actions";
 import { useEffect, useState } from "react";
 import { UserResponse } from "@/dto/userResponse";
+import { logOutAction } from "@/app/lib/authActions";
 
-export default function ThemeSwitcherAvatar(props: { isAuthorized: boolean }) {
+export default function AvatarComponent(props: { isAuthorized: boolean }) {
   const [dropDownOpen, setDropDownOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(props.isAuthorized);
   const [userData, setUserData] = useState<UserResponse>({
@@ -45,10 +43,8 @@ export default function ThemeSwitcherAvatar(props: { isAuthorized: boolean }) {
       }
     }
   };
-
   return (
-    <NavbarContent justify="end">
-      <ThemeSwitcher />
+    <>
       {isLoggedIn ? (
         <Dropdown
           placement="bottom-end"
@@ -91,6 +87,6 @@ export default function ThemeSwitcherAvatar(props: { isAuthorized: boolean }) {
           Sign Up
         </Button>
       )}
-    </NavbarContent>
+    </>
   );
 }
