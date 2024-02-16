@@ -12,8 +12,10 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({
+  auth,
   children,
 }: Readonly<{
+  auth: React.ReactNode;
   children: React.ReactNode;
 }>) {
   const loggedIn = cookies().has("accessToken");
@@ -23,6 +25,7 @@ export default async function RootLayout({
       <body className={inter.className}>
         <Providers>
           <Navigationbar isAuthorized={loggedIn}></Navigationbar>
+          {auth}
           {children}
         </Providers>
       </body>

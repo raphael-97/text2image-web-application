@@ -1,7 +1,7 @@
 import LoginForm from "@/components/LoginForm";
 import { Card, CardBody } from "@nextui-org/react";
 
-export default function Login() {
+export default function LoginModal() {
   return (
     <div className="flex flex-col text-center mt-14 items-center">
       <p className="text-4xl">Log In Below</p>

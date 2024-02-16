@@ -5,20 +5,22 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
-  Link,
 } from "@nextui-org/react";
 
 import { useEffect, useState } from "react";
 import { UserResponse } from "@/dto/userResponse";
 import { logOutAction } from "@/app/lib/authActions";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ServerResponse } from "@/dto/errorResponse";
+import Link from "next/link";
 
 export default function AvatarComponent(props: { isAuthorized: boolean }) {
   const [dropDownOpen, setDropDownOpen] = useState<boolean>(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(props.isAuthorized);
 
   const router = useRouter();
+
+  const pathName = usePathname();
 
   const [userData, setUserData] = useState<UserResponse>({
     username: "",
@@ -96,7 +98,13 @@ export default function AvatarComponent(props: { isAuthorized: boolean }) {
           </DropdownMenu>
         </Dropdown>
       ) : (
-        <Button as={Link} color="primary" href="/register" variant="flat">
+        <Button
+          as={Link}
+          color="primary"
+          href="/register"
+          variant="flat"
+          isDisabled={pathName === "/login" || pathName === "/register"}
+        >
           Sign Up
         </Button>
       )}
