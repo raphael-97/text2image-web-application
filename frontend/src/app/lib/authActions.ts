@@ -1,9 +1,9 @@
 "use server";
 
-import { ErrorResponse } from "@/dto/errorResponse";
 import { LoginRequest } from "@/dto/loginRequest";
 import { RefreshTokenRequest } from "@/dto/refreshTokenRequest";
 import { RegisterRequest } from "@/dto/registerRequest";
+import { ResourceServerResponse } from "@/dto/resourceServerResponse";
 import { TokenResponse } from "@/dto/tokenResponse";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -38,7 +38,7 @@ export async function registerAction(prevState: any, formData: FormData) {
   if (!response.ok) {
     const errorJson = await response.json();
 
-    const errorResponse: ErrorResponse = {
+    const errorResponse: ResourceServerResponse = {
       ...errorJson,
     };
     return errorResponse.message;
@@ -76,7 +76,7 @@ export async function loginAction(prevState: any, formData: FormData) {
 
   if (!response.ok) {
     const errorJson = await response.json();
-    const errorResponse: ErrorResponse = {
+    const errorResponse: ResourceServerResponse = {
       ...errorJson,
     };
     return errorResponse.message;

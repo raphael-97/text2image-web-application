@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { ModelRequest } from "@/dto/modelRequest";
-import { ErrorResponse } from "@/dto/errorResponse";
+import { ResourceServerResponse } from "@/dto/resourceServerResponse";
 
 export async function createModelAction(formData: FormData) {
   const modelRequest: ModelRequest = {
@@ -40,7 +40,7 @@ export async function createModelAction(formData: FormData) {
   }
   if (!res.ok) {
     const errorJson = await res.json();
-    const errorResponse: ErrorResponse = {
+    const errorResponse: ResourceServerResponse = {
       ...errorJson,
     };
     return errorResponse.message;
