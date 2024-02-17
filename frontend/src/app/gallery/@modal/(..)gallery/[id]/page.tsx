@@ -1,6 +1,7 @@
 import { CheckIfUserHasAccessToImage } from "@/app/lib/imageAuthActions";
 import { Modal, ModalBody, ModalContent } from "@nextui-org/react";
 import Image from "next/image";
+import { notFound } from "next/navigation";
 import React from "react";
 
 export default async function InterceptingModal({
@@ -9,9 +10,9 @@ export default async function InterceptingModal({
   params: { id: string };
 }) {
   try {
-    CheckIfUserHasAccessToImage(parseInt(params.id));
+    await CheckIfUserHasAccessToImage(parseInt(params.id));
   } catch (error) {
-    if (error instanceof Error) throw new Error(error.message);
+    if (error instanceof Error) notFound();
   }
   return (
     <Modal
