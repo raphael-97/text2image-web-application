@@ -1,12 +1,18 @@
+import { CheckIfUserHasAccessToImage } from "@/app/lib/imageAuthActions";
 import { Modal, ModalBody, ModalContent } from "@nextui-org/react";
 import Image from "next/image";
 import React from "react";
 
-export default function InterceptingModal({
+export default async function InterceptingModal({
   params,
 }: {
   params: { id: string };
 }) {
+  try {
+    CheckIfUserHasAccessToImage(parseInt(params.id));
+  } catch (error) {
+    if (error instanceof Error) throw new Error(error.message);
+  }
   return (
     <Modal
       defaultOpen
@@ -20,6 +26,7 @@ export default function InterceptingModal({
         <ModalBody>
           <div className="flex justify-center">
             <Image
+              unoptimized
               src={`/api/images/${params.id}`}
               alt={`img_${params.id}`}
               width={512}

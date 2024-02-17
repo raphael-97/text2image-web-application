@@ -1,15 +1,9 @@
-import { ServerResponse } from "@/dto/errorResponse";
 import { ResourceServerResponse } from "@/dto/resourceServerResponse";
 import { UserResponse } from "@/dto/userResponse";
 import { cookies } from "next/headers";
 
 export async function GET() {
   const tokenValue = cookies().get("accessToken")?.value;
-
-  const serverResponse: ServerResponse = {
-    success: false,
-    message: "",
-  };
 
   try {
     const res = await fetch(

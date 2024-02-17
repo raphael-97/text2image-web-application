@@ -7,6 +7,7 @@ export default function GalleryImageComponent(props: { id: number }) {
     <div>
       <Link key={props.id} href={`/gallery/${props.id}`} scroll={false}>
         <Image
+          unoptimized
           priority
           src={`/api/images/${props.id}`}
           alt={`img_${props.id}`}
