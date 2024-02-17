@@ -17,7 +17,6 @@ export default async function GalleryImage({
   return (
     <div className="flex justify-center mt-14">
       <Image
-        unoptimized
         src={`/api/images/${params.id}`}
         alt={`img_${params.id}`}
         width={512}

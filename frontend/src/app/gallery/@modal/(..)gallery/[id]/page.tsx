@@ -27,7 +27,6 @@ export default async function InterceptingModal({
         <ModalBody>
           <div className="flex justify-center">
             <Image
-              unoptimized
               src={`/api/images/${params.id}`}
               alt={`img_${params.id}`}
               width={512}
