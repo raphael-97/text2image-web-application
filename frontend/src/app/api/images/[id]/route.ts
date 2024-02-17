@@ -1,6 +1,5 @@
 import { ResourceServerResponse } from "@/dto/resourceServerResponse";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { NextRequest } from "next/server";
 
 export async function GET(
@@ -11,31 +10,27 @@ export async function GET(
 
   // User does not have a token => no need to call auth/resource server
   if (!tokenValue) {
-    redirect("/login");
+    Response.redirect("/login");
   }
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/image/${params.id}`,
-      {
-        headers: {
-          Authorization: "Bearer " + tokenValue,
-        },
-      }
-    );
-
-    if (res.status === 401) {
-      throw new Error("User is unauthorized to access this resource");
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/image/${params.id}`,
+    {
+      headers: {
+        Authorization: "Bearer " + tokenValue,
+      },
     }
+  );
 
-    if (!res.ok) {
-      const errorResponse: ResourceServerResponse = await res.json();
-      throw new Error(errorResponse.message);
-    }
-
-    const blob = await res.blob();
-
-    return new Response(blob);
-  } catch (error) {
-    throw new Error("Resource Server not reachable, try again");
+  if (res.status === 401) {
+    throw new Error("User is unauthorized to access this resource");
   }
+
+  if (!res.ok) {
+    const errorResponse: ResourceServerResponse = await res.json();
+    throw new Error(errorResponse.message);
+  }
+
+  const blob = await res.blob();
+
+  return new Response(blob);
 }

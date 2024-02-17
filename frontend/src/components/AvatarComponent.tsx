@@ -36,7 +36,9 @@ export default function AvatarComponent(props: { isAuthorized: boolean }) {
     if (isOpen) {
       const res = await fetch("/api/users");
       if (!res.ok && res.status !== 302) {
+        setIsLoggedIn(false);
         router.push("/login");
+        return;
       }
       if (res.status === 302) {
         const data = await res.json();

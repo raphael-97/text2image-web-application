@@ -2,15 +2,9 @@ import { ServerResponse } from "@/dto/errorResponse";
 import { ResourceServerResponse } from "@/dto/resourceServerResponse";
 import { UserResponse } from "@/dto/userResponse";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 export async function GET() {
   const tokenValue = cookies().get("accessToken")?.value;
-
-  // User does not have a token => no need to call auth/resource server
-  if (!tokenValue) {
-    redirect("/login");
-  }
 
   const serverResponse: ServerResponse = {
     success: false,
@@ -28,24 +22,20 @@ export async function GET() {
     );
 
     if (res.status === 401) {
-      serverResponse.message = "Resource server is not available, try again";
-      return Response.json(serverResponse, { status: 200 });
+      throw new Error("User is not authorized");
     }
 
     if (res.status === 404) {
       const errorResponse: ResourceServerResponse = await res.json();
-      serverResponse.message = errorResponse.message;
-      return Response.json(serverResponse, { status: 200 });
+      throw new Error(errorResponse.message);
     }
     if (!res.ok) {
-      serverResponse.message = "Resource server is not available, try again";
-      return Response.json(serverResponse, { status: 200 });
+      throw new Error("Resource server is not available, try again");
     }
 
     const userData: UserResponse = await res.json();
     return Response.json(userData, { status: 302 });
   } catch (error) {
-    serverResponse.message = "Resource server is not available, try again";
-    return Response.json(serverResponse, { status: 200 });
+    throw new Error("Resource server is not available, try again");
   }
 }

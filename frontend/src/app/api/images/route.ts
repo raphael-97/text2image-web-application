@@ -2,7 +2,6 @@ import { ServerResponse } from "@/dto/errorResponse";
 import { ImgResponse } from "@/dto/imgResponse";
 import { ResourceServerResponse } from "@/dto/resourceServerResponse";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { NextRequest } from "next/server";
 
 export async function GET() {
@@ -10,7 +9,7 @@ export async function GET() {
 
   // User does not have a token => no need to call auth/resource server
   if (!tokenValue) {
-    redirect("/login");
+    Response.redirect("/login");
   }
 
   try {
