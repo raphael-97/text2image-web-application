@@ -33,7 +33,7 @@ public class ImageController {
              String response = "Image uploaded successfully";
              return new ResponseEntity<>(response, HttpStatus.CREATED);
          } catch (IOException e) {
-             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Image could not be uploaded, try again!");
+             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
          }
     }
 
@@ -42,8 +42,8 @@ public class ImageController {
          try {
              byte[] imageData = imageStorageService.getImageData(id);
              return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageData);
-         } catch (IOException e) {
-             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Image could not be downloaded, try again");
+         } catch (Exception e) {
+             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
          }
     }
 
