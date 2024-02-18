@@ -1,5 +1,6 @@
 import { ServerResponse } from "@/dto/errorResponse";
 import { ResourceServerResponse } from "@/dto/resourceServerResponse";
+import { cookies } from "next/headers";
 import { NextRequest } from "next/server";
 
 interface ModelInput {
@@ -35,12 +36,23 @@ export async function POST(
   };
 
   try {
+    const tokenValue = cookies().get("accessToken")?.value;
+    var headerValue = {};
+    if (tokenValue) {
+      headerValue = {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + tokenValue,
+      };
+    } else {
+      headerValue = {
+        "Content-Type": "application/json",
+      };
+    }
+
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/models/${params.id}`,
       {
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: headerValue,
         method: "POST",
         body: JSON.stringify(modelInput),
       }
