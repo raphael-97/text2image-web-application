@@ -13,15 +13,6 @@ import { notFound, useSearchParams } from "next/navigation";
 import { GrGallery } from "react-icons/gr";
 import { IoDownloadOutline } from "react-icons/io5";
 import { ServerResponse } from "@/dto/errorResponse";
-import { ModelResponse } from "@/dto/modelResponse";
-
-async function checkModelName(name: string) {
-  const res = await fetch(`/api/models`);
-  const models: ModelResponse[] = await res.json();
-  if (!models.find((model) => model.name === name)) {
-    notFound();
-  }
-}
 
 export default function ModelView({
   params: { id },
@@ -30,7 +21,8 @@ export default function ModelView({
 }) {
   const searchParams = useSearchParams();
   const modelName = searchParams.get("name");
-  modelName ? checkModelName(modelName) : notFound();
+  if (!modelName) notFound();
+
   const [value, setValue] = useState<string>("");
   const [imageUrl, setImageUrl] = useState<string>("");
   const [imageBlob, setImageBlob] = useState<Blob | null>(null);
