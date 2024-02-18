@@ -12,6 +12,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -28,6 +29,9 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
     private final RefreshTokenService refreshTokenService;
 
     private final JwtService jwtService;
+
+    @Value("${app.frontend.domain}")
+    private String frontendDomain;
 
     @Autowired
     public AuthenticationSuccessHandlerImpl(UserServiceImpl userService, RefreshTokenService refreshTokenService,
@@ -60,11 +64,11 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
 
                 User user = userService.registerUser(registerRequest);
                 setCookiesToUser(user, response);
-                response.sendRedirect("http://localhost:3000/gallery");
+                response.sendRedirect(frontendDomain + "/gallery");
             } else {
                 User user = userService.getUserByEmail(OAuth2UserEmail);
                 setCookiesToUser(user, response);
-                response.sendRedirect("http://localhost:3000/gallery");
+                response.sendRedirect(frontendDomain + "/gallery");
             }
         }
     }
