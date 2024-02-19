@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   postgres-db:
@@ -8,3 +8,29 @@ services:
       POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
+
+  backend:
+    image: backend
+    build:
+      context: ./backend
+      network: host
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres-db
+
+  frontend:
+    image: frontend
+    build:
+      context: ./frontend
+      network: host
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
