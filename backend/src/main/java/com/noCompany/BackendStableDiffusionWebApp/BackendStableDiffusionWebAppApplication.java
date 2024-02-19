@@ -94,7 +94,7 @@ public class BackendStableDiffusionWebAppApplication implements CommandLineRunne
 		Authentication authenticate = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 		SecurityContextHolder.getContext().setAuthentication(authenticate);
 
-		CustomMultiPartFile sunsetFile = new CustomMultiPartFile(new File("src/main/resources/images/sunset.jfif"));
+		CustomMultiPartFile sunsetFile = new CustomMultiPartFile(new File("src/main/resources/static/sunset.jfif"));
 		ModelRequest stableDiffusionXL = ModelRequest.builder()
 				.name("Stable-diffusion-xl-base-1.0")
 				.inferenceUrl("https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0")
@@ -102,9 +102,9 @@ public class BackendStableDiffusionWebAppApplication implements CommandLineRunne
 		if(modelRepository.findByName(stableDiffusionXL.getName()).isEmpty())
 			modelService.createModel(stableDiffusionXL, sunsetFile);
 
-		CustomMultiPartFile forestFile = new CustomMultiPartFile(new File("src/main/resources/images/forest.jfif"));
+		CustomMultiPartFile forestFile = new CustomMultiPartFile(new File("src/main/resources/static/forest.jfif"));
 		ModelRequest stableDiffusion2_1 = ModelRequest.builder()
-				.name("stable-diffusion-2-1")
+				.name("Stable-diffusion-2-1")
 				.inferenceUrl("https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1")
 				.build();
 		if(modelRepository.findByName(stableDiffusion2_1.getName()).isEmpty())
