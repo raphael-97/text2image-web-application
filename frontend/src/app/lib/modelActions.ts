@@ -5,7 +5,13 @@ import { cookies } from "next/headers";
 import { ModelRequest } from "@/dto/modelRequest";
 import { ResourceServerResponse } from "@/dto/resourceServerResponse";
 
-export async function createModelAction(formData: FormData) {
+export async function createModelAction(prevState: any, formData: FormData) {
+  const accessToken = cookies().get("accessToken")?.value;
+
+  if (!accessToken) {
+    redirect(`${process.env.NEXT_PUBLIC_FRONTEND_DOMAIN_URL}/login`);
+  }
+
   const modelRequest: ModelRequest = {
     name: formData.get("name"),
     inferenceUrl: formData.get("inferenceUrl"),
@@ -28,7 +34,7 @@ export async function createModelAction(formData: FormData) {
     `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/models`,
     {
       headers: {
-        Authorization: `Bearer ${await cookies().get("accessToken")?.value}`,
+        Authorization: `Bearer ${accessToken}`,
       },
       method: "POST",
       body: sendFormData,
@@ -36,7 +42,7 @@ export async function createModelAction(formData: FormData) {
   );
 
   if (res.status === 401) {
-    return "You are not an admin!";
+    throw new Error("User is not an admin");
   }
   if (!res.ok) {
     const errorJson = await res.json();
@@ -46,5 +52,5 @@ export async function createModelAction(formData: FormData) {
     return errorResponse.message;
   }
 
-  await redirect("/explore");
+  return "success";
 }

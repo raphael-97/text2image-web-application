@@ -1,14 +1,26 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { createModelAction } from "@/app/lib/modelActions";
 import { Button, Input } from "@nextui-org/react";
 import { useRef, useState } from "react";
 import { MdOutlineFileUpload } from "react-icons/md";
+import { useFormState } from "react-dom";
+import { useRouter } from "next/navigation";
+
+const messageInit = "";
 
 export default function CreateModelForm() {
   const [pathValue, setPathValue] = useState("");
 
+  const [serverMessage, action] = useFormState(createModelAction, messageInit);
+
   const inputFile = useRef<HTMLInputElement | null>(null);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (serverMessage === "success") router.push("/explore");
+  }, [serverMessage]);
 
   const onButtonClick = () => {
     if (inputFile.current !== null) {
@@ -16,7 +28,7 @@ export default function CreateModelForm() {
     }
   };
   return (
-    <form action={createModelAction} className="px-5">
+    <form action={action} className="px-5">
       <Input
         className="pt-5"
         label="Model name"

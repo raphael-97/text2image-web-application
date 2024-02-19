@@ -51,7 +51,7 @@ export async function registerAction(prevState: any, formData: FormData) {
   };
 
   setAuthCookies(tokenResponse);
-  redirect("/gallery");
+  redirect(`${process.env.NEXT_PUBLIC_FRONTEND_DOMAIN_URL}/gallery`);
 }
 
 export async function loginAction(prevState: any, formData: FormData) {
@@ -86,7 +86,7 @@ export async function loginAction(prevState: any, formData: FormData) {
     ...data,
   };
   setAuthCookies(tokenResponse);
-  redirect("/gallery");
+  redirect(`${process.env.NEXT_PUBLIC_FRONTEND_DOMAIN_URL}/gallery`);
 }
 
 export async function setAuthCookies(tokenResponse: TokenResponse) {
@@ -138,7 +138,7 @@ export async function getNewJwtAndRefreshToken(refreshTokenParam: string) {
 
 export async function logOutAction() {
   removeTokens();
-  redirect("/");
+  redirect(`${process.env.NEXT_PUBLIC_FRONTEND_DOMAIN_URL}`);
 }
 
 export async function removeTokens() {
@@ -149,6 +149,6 @@ export async function removeTokens() {
 
 export async function handleGoogleLogin() {
   redirect(
-    `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/oauth2/authorization/google`
+    `${process.env.NEXT_PUBLIC_BACKEND_DOMAIN_URL}/oauth2/authorization/google`
   );
 }
