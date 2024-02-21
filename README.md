@@ -17,11 +17,11 @@ myself to gain a better understanding of Spring Boot.
 
 ### Explore page
 
-![Explore page](/showcase/explore_page.png)
+![Explore page](https://github.com/Raphael-97/Text2Image-Web-Application/blob/main/showcase/explore_page.PNG)
 
 ### Gallery page
 
-![Gallery page](/showcase/gallery_page.png)
+![Gallery page](https://github.com/Raphael-97/Text2Image-Web-Application/blob/showcase/showcase/gallery_page.PNG)
 
 ## Tech Stack
 
