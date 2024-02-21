@@ -21,7 +21,7 @@ myself to gain a better understanding of Spring Boot.
 
 ### Gallery page
 
-![Gallery page](https://github.com/Raphael-97/Text2Image-Web-Application/blob/showcase/showcase/gallery_page.PNG)
+![Gallery page](https://github.com/Raphael-97/Text2Image-Web-Application/blob/main/showcase/gallery_page.PNG)
 
 ## Tech Stack
 
