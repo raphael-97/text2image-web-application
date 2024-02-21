@@ -112,6 +112,22 @@ docker compose up
 8. In your browser, navigate to `http://localhost:3000` 
 
 
+### Adding new models
+If you want to add new AI models, you can log in with the admin account.
+
+```
+Admin account:
+email: admin@gmail.com
+password: password
+```
+Only Text2Image supported for now!
+
+After login go to explore page and click "new model".
+In the Form you can add an Inference URL and choose a thumbnail for example:
+```
+https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5
+```
+
 Have Fun :) 
 
 If you have any questions, please feel free to ask by opening an issue in this repository.
