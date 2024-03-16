@@ -12,7 +12,7 @@ public class InferenceRequestToHuggingFace {
 
     public InferenceRequestToHuggingFace(String inputs) {
         this.inputs = inputs;
-        this.options = new Options(false, false);
+        this.options = new Options(false, true);
     }
 
 }

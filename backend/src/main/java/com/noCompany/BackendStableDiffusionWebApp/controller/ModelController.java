@@ -50,7 +50,7 @@ public class ModelController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<byte[]> getModelThumbnail(@PathVariable Long id) throws IOException {
+    public ResponseEntity<byte[]> getModelThumbnail(@PathVariable Long id) {
         try {
             byte[] imageData = modelService.getModelThumbnailById(id);
             return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageData);
