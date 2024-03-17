@@ -115,7 +115,7 @@ public class ImageStorageService {
         return imagesByUser.stream().map(this::imageToImageResponse).collect(Collectors.toList());
     }
 
-    private byte[] loadImage(Image image) throws IOException {
+    public byte[] loadImage(Image image) throws IOException {
         if(storeLocally) {
             return Files.readAllBytes(Path.of(image.getSavePathUrl()));
         } else {
@@ -123,7 +123,7 @@ public class ImageStorageService {
         }
     }
 
-    private ImageResponse imageToImageResponse(Image image) {
+    public ImageResponse imageToImageResponse(Image image) {
         return ImageResponse.builder()
                 .id(image.getId())
                 .build();

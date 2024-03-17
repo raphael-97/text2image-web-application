@@ -18,5 +18,3 @@ public class InferenceRequestToHuggingFace {
 }
 
 record Options(Boolean use_cache, Boolean wait_for_model){}
-
-
